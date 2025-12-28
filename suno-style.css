@@ -1,0 +1,223 @@
+.suno-generator {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.suno-generator h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.suno-field {
+    margin-bottom: 15px;
+}
+
+.suno-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.suno-field textarea,
+.suno-field select,
+.suno-field input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.suno-field textarea {
+    resize: vertical;
+}
+
+.suno-btn {
+    background: #0073aa;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.suno-btn:hover {
+    background: #005a87;
+}
+
+#suno-output {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 4px;
+    min-height: 50px;
+}
+
+#suno-output pre {
+    background: #f5f5f5;
+    padding: 10px;
+    overflow-x: auto;
+    font-size: 12px;
+}
+
+.suno-song {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.suno-song audio {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Auto Generator Styles */
+.suno-auto {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.suno-auto h3 {
+    color: white;
+}
+
+.suno-auto .suno-field label {
+    color: rgba(255,255,255,0.9);
+}
+
+.suno-desc {
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+.suno-row {
+    display: flex;
+    gap: 15px;
+}
+
+.suno-half {
+    flex: 1;
+}
+
+.suno-btn-auto {
+    background: #fff;
+    color: #667eea;
+    font-weight: bold;
+    width: 100%;
+    padding: 15px;
+}
+
+.suno-btn-auto:hover {
+    background: #f0f0f0;
+}
+
+#suno-auto-output {
+    background: rgba(255,255,255,0.95);
+    color: #333;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.suno-loading {
+    padding: 20px;
+    text-align: center;
+}
+
+.suno-loading p {
+    margin: 0;
+    color: #667eea;
+    font-weight: bold;
+}
+
+.suno-success {
+    padding: 20px;
+}
+
+.suno-success h4 {
+    color: #28a745;
+    margin-top: 0;
+}
+
+.suno-error {
+    padding: 20px;
+    background: #fff5f5;
+}
+
+.suno-error h4 {
+    color: #dc3545;
+    margin-top: 0;
+}
+
+.suno-lyrics {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    font-size: 13px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.suno-status {
+    color: #667eea;
+    font-weight: bold;
+    padding: 10px;
+    background: #f0f4ff;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.suno-songs {
+    padding: 15px;
+    background: #e8f5e9;
+    border-radius: 4px;
+}
+
+.suno-songs h4 {
+    color: #28a745;
+    margin-top: 0;
+}
+
+.suno-cover {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.suno-download {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.suno-download:hover {
+    background: #5a6fd6;
+}
+
+details summary {
+    cursor: pointer;
+    color: #667eea;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+    .suno-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
