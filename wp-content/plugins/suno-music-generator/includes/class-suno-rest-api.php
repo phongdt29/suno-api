@@ -491,7 +491,7 @@ Trả về JSON với format:
         if (!isset($data['choices'][0]['message']['content'])) {
             return array(
                 'success' => false,
-                'message' => __('Không thể tạo nội dung từ ChatGPT', 'suno-music-generator'),
+                'message' => isset(['error']['message']) ? 'OpenAI Error: ' . ['error']['message'] : __('Không thể tạo nội dung từ ChatGPT', 'suno-music-generator'),
             );
         }
 
