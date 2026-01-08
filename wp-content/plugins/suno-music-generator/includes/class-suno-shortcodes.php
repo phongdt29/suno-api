@@ -19,6 +19,7 @@ class Suno_Shortcodes {
         add_shortcode('suno_custom_generator', array(__CLASS__, 'custom_generator_shortcode'));
         add_shortcode('suno_auto_generator', array(__CLASS__, 'auto_generator_shortcode'));
         add_shortcode('suno_lyrics_generator', array(__CLASS__, 'lyrics_generator_shortcode'));
+        add_shortcode('suno_song_list', array(__CLASS__, 'song_list_shortcode'));
     }
 
     /**
@@ -337,6 +338,87 @@ Under the blue sky, we will thrive', 'suno-music-generator'); ?>"
 
             <div class="suno-error" style="display: none;"></div>
         </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * Song list shortcode
+     * [suno_song_list limit="10" columns="2"]
+     */
+    public static function song_list_shortcode($atts) {
+        $atts = shortcode_atts(array(
+            'limit' => 10,
+            'user' => 'all',
+            'columns' => 2,
+        ), $atts);
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'suno_history';
+        $limit = intval($atts['limit']);
+        $columns = intval($atts['columns']);
+
+        // Build query
+        if ($atts['user'] === 'current' && is_user_logged_in()) {
+            $user_id = get_current_user_id();
+            $query = $wpdb->prepare(
+                "SELECT * FROM $table_name WHERE status = 'completed' AND songs IS NOT NULL AND songs != '' AND user_id = %d ORDER BY created_at DESC LIMIT %d",
+                $user_id,
+                $limit
+            );
+        } else {
+            $query = $wpdb->prepare(
+                "SELECT * FROM $table_name WHERE status = 'completed' AND songs IS NOT NULL AND songs != '' ORDER BY created_at DESC LIMIT %d",
+                $limit
+            );
+        }
+
+        $items = $wpdb->get_results($query);
+
+        ob_start();
+        ?>
+        <div class="suno-song-list-wrap">
+            <?php if (empty($items)) : ?>
+                <p class="suno-no-songs"><?php _e('Chưa có bài hát nào.', 'suno-music-generator'); ?></p>
+            <?php else : ?>
+                <div class="suno-song-grid" style="display:grid;grid-template-columns:repeat(<?php echo $columns; ?>,1fr);gap:20px;">
+                    <?php foreach ($items as $item) :
+                        $songs = json_decode($item->songs, true);
+                        if (empty($songs)) continue;
+                        foreach ($songs as $song) :
+                    ?>
+                        <div class="suno-song-card">
+                            <?php if (!empty($song['image_url'])) : ?>
+                                <div class="suno-cover-wrap"><img src="<?php echo esc_url($song['image_url']); ?>" alt="<?php echo esc_attr($song['title']); ?>" class="suno-cover-img"></div>
+                            <?php endif; ?>
+                            <div class="suno-song-info-box">
+                                <h4 class="suno-song-title-text"><?php echo esc_html($song['title'] ?: 'Untitled'); ?></h4>
+                                <?php if (!empty($song['style'])) : ?><p class="suno-style-text"><?php echo esc_html($song['style']); ?></p><?php endif; ?>
+                                <?php if (!empty($song['audio_url'])) : ?>
+                                    <audio controls preload="metadata" style="width:100%;margin:10px 0;"><source src="<?php echo esc_url($song['audio_url']); ?>" type="audio/mpeg"></audio>
+                                <?php endif; ?>
+                                <div class="suno-btns">
+                                    <?php if (!empty($song['audio_url'])) : ?><a href="<?php echo esc_url($song['audio_url']); ?>" download class="suno-btn suno-btn-secondary" style="padding:8px 12px;font-size:12px;">Tải MP3</a><?php endif; ?>
+                                    <?php if (!empty($song['video_url'])) : ?><a href="<?php echo esc_url($song['video_url']); ?>" download class="suno-btn suno-btn-secondary" style="padding:8px 12px;font-size:12px;">Tải Video</a><?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        <style>
+        .suno-song-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:.2s}
+        .suno-song-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+        .suno-cover-wrap{position:relative;padding-top:100%;overflow:hidden}
+        .suno-cover-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+        .suno-song-info-box{padding:16px}
+        .suno-song-title-text{margin:0 0 8px;font-size:16px;font-weight:600;color:#1e293b}
+        .suno-style-text{margin:0 0 8px;font-size:13px;color:#64748b}
+        .suno-btns{display:flex;gap:8px;flex-wrap:wrap}
+        .suno-no-songs{text-align:center;padding:40px;color:#64748b}
+        @media(max-width:768px){.suno-song-grid{grid-template-columns:1fr!important}}
+        </style>
         <?php
         return ob_get_clean();
     }

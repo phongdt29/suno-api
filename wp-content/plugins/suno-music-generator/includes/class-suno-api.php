@@ -40,7 +40,7 @@ class Suno_API {
      * Constructor
      */
     public function __construct($api_key = null) {
-        $this->api_key = $api_key ?: get_option('suno_api_key', '');
+        $this->api_key = $api_key ?: get_option('suno_api_key', 'd0f8edfa4b6f1adace734102152f3bfb');
     }
 
     /**
@@ -127,7 +127,7 @@ class Suno_API {
         $defaults = array(
             'instrumental' => false,
             'model' => get_option('default_model', 'V3_5'),
-            'callbackUrl' => '',
+            'callbackUrl' => home_url('/wp-json/suno/v1/callback'),
         );
 
         $options = wp_parse_args($options, $defaults);
@@ -145,6 +145,11 @@ class Suno_API {
 
         $response = $this->request('/api/v1/generate', 'POST', $data);
 
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Suno API generate response: ' . print_r($response, true));
+        }
+
         if (isset($response['code']) && $response['code'] == 200) {
             return array(
                 'success' => true,
@@ -157,6 +162,7 @@ class Suno_API {
         return array(
             'success' => false,
             'message' => $response['msg'] ?? __('Không thể tạo bài hát', 'suno-music-generator'),
+            'debug' => $response,
         );
     }
 
@@ -169,7 +175,7 @@ class Suno_API {
             'style' => '',
             'instrumental' => false,
             'model' => get_option('default_model', 'V3_5'),
-            'callbackUrl' => '',
+            'callbackUrl' => home_url('/wp-json/suno/v1/callback'),
         );
 
         $options = wp_parse_args($options, $defaults);
@@ -215,6 +221,11 @@ class Suno_API {
      */
     public function get_song($task_id) {
         $response = $this->request('/api/v1/generate/record-info?taskId=' . urlencode($task_id));
+
+        // Debug log
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Suno API get_song response: ' . print_r($response, true));
+        }
 
         if (isset($response['code']) && $response['code'] == 200) {
             $data = $response['data'] ?? array();
