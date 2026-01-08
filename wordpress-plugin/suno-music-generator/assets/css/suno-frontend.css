@@ -1,0 +1,465 @@
+/**
+ * Suno Music Generator - Frontend Styles
+ */
+
+/* Variables */
+:root {
+    --suno-primary: #6366f1;
+    --suno-primary-hover: #4f46e5;
+    --suno-secondary: #64748b;
+    --suno-success: #22c55e;
+    --suno-error: #ef4444;
+    --suno-warning: #f59e0b;
+    --suno-bg: #f8fafc;
+    --suno-card-bg: #ffffff;
+    --suno-border: #e2e8f0;
+    --suno-text: #1e293b;
+    --suno-text-muted: #64748b;
+    --suno-radius: 12px;
+    --suno-radius-sm: 8px;
+    --suno-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --suno-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Container */
+.suno-generator-wrap {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px;
+    background: var(--suno-card-bg);
+    border-radius: var(--suno-radius);
+    box-shadow: var(--suno-shadow);
+}
+
+/* Form Groups */
+.suno-form-group {
+    margin-bottom: 20px;
+}
+
+.suno-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--suno-text);
+    font-size: 14px;
+}
+
+.suno-form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.suno-form-half {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Inputs */
+.suno-generator-wrap input[type="text"],
+.suno-generator-wrap textarea,
+.suno-generator-wrap select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--suno-border);
+    border-radius: var(--suno-radius-sm);
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--suno-card-bg);
+    color: var(--suno-text);
+    box-sizing: border-box;
+}
+
+.suno-generator-wrap input[type="text"]:focus,
+.suno-generator-wrap textarea:focus,
+.suno-generator-wrap select:focus {
+    outline: none;
+    border-color: var(--suno-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.suno-generator-wrap textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+.suno-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--suno-text-muted);
+}
+
+/* Checkbox */
+.suno-checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.suno-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.suno-checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--suno-primary);
+}
+
+/* Buttons */
+.suno-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--suno-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suno-btn-primary {
+    background: linear-gradient(135deg, var(--suno-primary) 0%, var(--suno-primary-hover) 100%);
+    color: #ffffff;
+}
+
+.suno-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--suno-shadow-lg);
+}
+
+.suno-btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.suno-btn-secondary {
+    background: var(--suno-bg);
+    color: var(--suno-text);
+    border: 2px solid var(--suno-border);
+}
+
+.suno-btn-secondary:hover {
+    background: var(--suno-border);
+}
+
+.suno-btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Spinner */
+.suno-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: suno-spin 0.8s linear infinite;
+}
+
+@keyframes suno-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Progress */
+.suno-progress {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.suno-progress-bar {
+    height: 8px;
+    background: var(--suno-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.suno-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--suno-primary), var(--suno-primary-hover));
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.3s;
+    animation: suno-progress-animation 2s ease-in-out infinite;
+}
+
+@keyframes suno-progress-animation {
+    0% {
+        width: 0%;
+    }
+    50% {
+        width: 70%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.suno-progress-text {
+    color: var(--suno-text-muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Results */
+.suno-results {
+    margin-top: 24px;
+}
+
+.suno-results-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--suno-text);
+}
+
+.suno-song-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.suno-song-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: var(--suno-bg);
+    border-radius: var(--suno-radius-sm);
+    transition: box-shadow 0.2s;
+}
+
+.suno-song-item:hover {
+    box-shadow: var(--suno-shadow);
+}
+
+.suno-song-cover {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--suno-radius-sm);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.suno-song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.suno-song-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 4px;
+    color: var(--suno-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suno-song-style {
+    font-size: 13px;
+    color: var(--suno-text-muted);
+    margin: 0 0 12px;
+}
+
+.suno-song-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.suno-song-actions .suno-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+/* Audio Player */
+.suno-audio-player {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.suno-audio-player audio {
+    width: 100%;
+    height: 40px;
+}
+
+/* Error */
+.suno-error {
+    margin-top: 24px;
+    padding: 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--suno-radius-sm);
+    color: var(--suno-error);
+}
+
+.suno-error-title {
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.suno-error-message {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* GPT Result */
+.suno-gpt-result {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--suno-bg);
+    border-radius: var(--suno-radius-sm);
+    border-left: 4px solid var(--suno-primary);
+}
+
+.suno-gpt-result h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--suno-text-muted);
+}
+
+.suno-gpt-content {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.suno-gpt-content strong {
+    color: var(--suno-text);
+}
+
+.suno-gpt-lyrics {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--suno-card-bg);
+    border-radius: var(--suno-radius-sm);
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 13px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Lyrics Result */
+.suno-lyrics-result {
+    margin-top: 24px;
+    padding: 20px;
+    background: var(--suno-bg);
+    border-radius: var(--suno-radius-sm);
+}
+
+.suno-lyrics-title {
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: var(--suno-text);
+}
+
+.suno-lyrics-content {
+    background: var(--suno-card-bg);
+    padding: 16px;
+    border-radius: var(--suno-radius-sm);
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 0 16px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.suno-copy-lyrics {
+    width: 100%;
+}
+
+/* Success State */
+.suno-success-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #dcfce7;
+    color: var(--suno-success);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.suno-success-badge::before {
+    content: "✓";
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .suno-generator-wrap {
+        padding: 16px;
+        margin: 0 12px;
+    }
+
+    .suno-form-row {
+        flex-direction: column;
+    }
+
+    .suno-form-half {
+        min-width: 100%;
+    }
+
+    .suno-song-item {
+        flex-direction: column;
+    }
+
+    .suno-song-cover {
+        width: 100%;
+        height: 200px;
+    }
+
+    .suno-btn {
+        width: 100%;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .suno-generator-wrap {
+        --suno-bg: #1e293b;
+        --suno-card-bg: #0f172a;
+        --suno-border: #334155;
+        --suno-text: #f1f5f9;
+        --suno-text-muted: #94a3b8;
+    }
+
+    .suno-error {
+        background: #450a0a;
+        border-color: #7f1d1d;
+    }
+}
+
+/* Animation for new items */
+@keyframes suno-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suno-song-item {
+    animation: suno-fade-in 0.3s ease-out;
+}

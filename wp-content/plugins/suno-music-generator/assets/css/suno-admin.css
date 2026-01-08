@@ -1,0 +1,253 @@
+/**
+ * Suno Music Generator - Admin Styles
+ */
+
+/* Admin Wrap */
+.suno-admin-wrap {
+    max-width: 1200px;
+}
+
+.suno-admin-wrap h1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+/* Dashboard Grid */
+.suno-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+}
+
+/* Cards */
+.suno-card {
+    background: #ffffff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.suno-card h2 {
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f1;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.suno-card h3 {
+    margin: 20px 0 10px;
+    font-size: 14px;
+}
+
+.suno-card h3:first-of-type {
+    margin-top: 0;
+}
+
+/* Credits Display */
+.suno-credits {
+    text-align: center;
+    padding: 20px;
+}
+
+.suno-credits .credits-number {
+    display: block;
+    font-size: 48px;
+    font-weight: 700;
+    color: #2271b1;
+    line-height: 1;
+}
+
+.suno-credits .credits-label {
+    display: block;
+    margin-top: 8px;
+    color: #50575e;
+    font-size: 14px;
+}
+
+/* Quick Generate Form */
+#suno-quick-generate label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+#suno-quick-generate textarea {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+#suno-quick-generate select {
+    margin-bottom: 16px;
+}
+
+/* Results */
+.suno-result {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f6f7f7;
+    border-radius: 6px;
+}
+
+.suno-result.loading {
+    text-align: center;
+    color: #50575e;
+}
+
+.suno-result .song-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.suno-result .song-item:last-child {
+    margin-bottom: 0;
+}
+
+.suno-result .song-cover {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.suno-result .song-info {
+    flex: 1;
+}
+
+.suno-result .song-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.suno-result .song-style {
+    font-size: 12px;
+    color: #50575e;
+    margin-bottom: 8px;
+}
+
+.suno-result audio {
+    width: 100%;
+    height: 32px;
+}
+
+/* Shortcodes Table */
+.suno-card table.form-table {
+    margin: 0;
+}
+
+.suno-card table.form-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.suno-card table.form-table tr:last-child td {
+    border-bottom: none;
+}
+
+.suno-card table.form-table code {
+    background: #f0f0f1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+/* History Table */
+.status-pending {
+    color: #996800;
+}
+
+.status-processing {
+    color: #2271b1;
+}
+
+.status-completed {
+    color: #00a32a;
+}
+
+.status-failed {
+    color: #d63638;
+}
+
+/* Settings Page */
+.suno-admin-wrap .form-table th {
+    width: 200px;
+}
+
+.suno-admin-wrap .regular-text {
+    width: 350px;
+}
+
+.suno-admin-wrap .description {
+    margin-top: 6px;
+}
+
+.suno-admin-wrap .description a {
+    text-decoration: none;
+}
+
+/* Test Connection */
+#test-result {
+    margin-top: 12px;
+}
+
+#test-result .success {
+    color: #00a32a;
+}
+
+#test-result .error {
+    color: #d63638;
+}
+
+/* Guide Page */
+.suno-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.suno-card li {
+    margin-bottom: 8px;
+}
+
+.suno-card p {
+    margin: 0 0 12px;
+}
+
+/* Loading State */
+.suno-loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2271b1;
+    border-radius: 50%;
+    animation: suno-admin-spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+@keyframes suno-admin-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .suno-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .suno-admin-wrap .form-table th {
+        width: auto;
+    }
+
+    .suno-admin-wrap .regular-text {
+        width: 100%;
+    }
+}
