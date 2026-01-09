@@ -115,6 +115,10 @@
                 <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>. <?php esc_html_e('All Rights Reserved.', 'miraculous-music'); ?></p>
             </div>
         </div>
+
+        <!----Audio Player---->
+        <?php get_template_part('template-parts/player'); ?>
+
 	</div>
 	<!----Main Wrapper End---->
 

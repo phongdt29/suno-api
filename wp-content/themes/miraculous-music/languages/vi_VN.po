@@ -1,0 +1,258 @@
+# Translation file for Miraculous Music Theme
+# Copyright (C) 2024
+# This file is distributed under the same license as the Miraculous Music package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Miraculous Music 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi_VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# Footer
+msgid "Download our App"
+msgstr "Tải ứng dụng"
+
+msgid "Go Mobile with our app. Listen to your favourite songs at just one click. Download Now!"
+msgstr "Nghe nhạc di động với ứng dụng của chúng tôi. Nghe những bài hát yêu thích chỉ với một cú nhấp chuột. Tải ngay!"
+
+msgid "subscribe"
+msgstr "đăng ký"
+
+msgid "Subscribe to our newsletter and get latest updates and offers."
+msgstr "Đăng ký nhận bản tin để nhận cập nhật và ưu đãi mới nhất."
+
+msgid "Enter Your Name"
+msgstr "Nhập tên của bạn"
+
+msgid "Enter Your Email"
+msgstr "Nhập email của bạn"
+
+msgid "sign me up"
+msgstr "đăng ký ngay"
+
+msgid "contact us"
+msgstr "liên hệ"
+
+msgid "Call us :"
+msgstr "Gọi cho chúng tôi:"
+
+msgid "email us :"
+msgstr "Email:"
+
+msgid "walk in :"
+msgstr "Địa chỉ:"
+
+msgid "follow us :"
+msgstr "theo dõi chúng tôi:"
+
+msgid "All Rights Reserved."
+msgstr "Đã đăng ký bản quyền."
+
+# Menu
+msgid "Primary Menu"
+msgstr "Menu chính"
+
+msgid "Sidebar Menu"
+msgstr "Menu thanh bên"
+
+# Sidebar
+msgid "Sidebar"
+msgstr "Thanh bên"
+
+msgid "Add widgets here to appear in your sidebar."
+msgstr "Thêm widget vào đây để hiển thị trong thanh bên."
+
+# Footer Widgets
+msgid "Footer 1"
+msgstr "Chân trang 1"
+
+msgid "Footer widget area 1"
+msgstr "Khu vực widget chân trang 1"
+
+msgid "Footer 2"
+msgstr "Chân trang 2"
+
+msgid "Footer widget area 2"
+msgstr "Khu vực widget chân trang 2"
+
+msgid "Footer 3"
+msgstr "Chân trang 3"
+
+msgid "Footer widget area 3"
+msgstr "Khu vực widget chân trang 3"
+
+msgid "Footer 4"
+msgstr "Chân trang 4"
+
+msgid "Footer widget area 4"
+msgstr "Khu vực widget chân trang 4"
+
+# Music Post Type
+msgid "Music"
+msgstr "Nhạc"
+
+msgid "Song"
+msgstr "Bài hát"
+
+msgid "Add New Song"
+msgstr "Thêm bài hát mới"
+
+msgid "Edit Song"
+msgstr "Chỉnh sửa bài hát"
+
+msgid "New Song"
+msgstr "Bài hát mới"
+
+msgid "View Song"
+msgstr "Xem bài hát"
+
+msgid "Search Songs"
+msgstr "Tìm kiếm bài hát"
+
+msgid "No songs found"
+msgstr "Không tìm thấy bài hát"
+
+msgid "No songs found in Trash"
+msgstr "Không có bài hát nào trong thùng rác"
+
+# Player
+msgid "download now"
+msgstr "tải xuống"
+
+msgid "Add To Favourites"
+msgstr "Thêm vào yêu thích"
+
+msgid "Add To Playlist"
+msgstr "Thêm vào playlist"
+
+msgid "Share"
+msgstr "Chia sẻ"
+
+msgid "queue"
+msgstr "hàng đợi"
+
+msgid "clear"
+msgstr "xóa"
+
+msgid "save"
+msgstr "lưu"
+
+msgid "Shuffle"
+msgstr "Phát ngẫu nhiên"
+
+msgid "Repeat"
+msgstr "Lặp lại"
+
+msgid "quality"
+msgstr "chất lượng"
+
+msgid "High"
+msgstr "Cao"
+
+msgid "Medium"
+msgstr "Trung bình"
+
+msgid "Low"
+msgstr "Thấp"
+
+# Queue Modals
+msgid "Are you sure you want to clear your queue?"
+msgstr "Bạn có chắc chắn muốn xóa hàng đợi không?"
+
+msgid "clear all"
+msgstr "xóa tất cả"
+
+msgid "cancel"
+msgstr "hủy"
+
+msgid "Log in to start sharing your music!"
+msgstr "Đăng nhập để bắt đầu chia sẻ nhạc của bạn!"
+
+msgid "continue with google"
+msgstr "tiếp tục với Google"
+
+msgid "continue with facebook"
+msgstr "tiếp tục với Facebook"
+
+msgid "or"
+msgstr "hoặc"
+
+msgid "Enter your email"
+msgstr "Nhập email"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Submit"
+msgstr "Gửi"
+
+msgid "By continuing, you agree to our"
+msgstr "Bằng cách tiếp tục, bạn đồng ý với"
+
+msgid "Terms"
+msgstr "Điều khoản"
+
+msgid "and"
+msgstr "và"
+
+msgid "Privacy Policy"
+msgstr "Chính sách bảo mật"
+
+# Index Page
+msgid "Recent Music"
+msgstr "Nhạc mới"
+
+msgid "All Music"
+msgstr "Tất cả nhạc"
+
+msgid "Load More"
+msgstr "Xem thêm"
+
+msgid "No music found."
+msgstr "Không tìm thấy nhạc."
+
+# Suno API
+msgid "Generate Music"
+msgstr "Tạo nhạc"
+
+msgid "Enter a description for your music"
+msgstr "Nhập mô tả cho bài nhạc"
+
+msgid "Generate"
+msgstr "Tạo"
+
+msgid "Music Title"
+msgstr "Tên bài hát"
+
+msgid "Artist"
+msgstr "Nghệ sĩ"
+
+msgid "Suno AI"
+msgstr "Suno AI"
+
+# Time
+msgid "Posted on"
+msgstr "Đăng vào"
+
+msgid "by"
+msgstr "bởi"
+
+# Comments
+msgid "Comments"
+msgstr "Bình luận"
+
+msgid "Leave a Comment"
+msgstr "Để lại bình luận"
+
+msgid "Your comment"
+msgstr "Bình luận của bạn"
+
+msgid "Post Comment"
+msgstr "Đăng bình luận"

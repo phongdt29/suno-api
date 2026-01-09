@@ -1,6 +1,6 @@
 <?php
 /**
- * The main template file
+ * The main template file - Homepage with Suno API Music
  *
  * @package Miraculous_Music
  * @since 1.0.0
@@ -15,15 +15,15 @@ get_header(); ?>
             // Get banner settings from customizer
             $banner_title = get_theme_mod('banner_title', 'Listen Millions of songs for Free!');
             $banner_desc = get_theme_mod('banner_description', 'Nowhere else provides the most listening services than here. Enjoy Your day!');
-            $banner_bg = get_theme_mod('banner_background', get_template_directory_uri() . '/assets/images/banner/img.png');
+            $banner_bg = get_theme_mod('banner_background', get_template_directory_uri() . '/assets/images/banner.png');
             ?>
             <div class="ms_banner_wrapper">
                 <div class="ms_banner_text">
                     <h1><?php echo esc_html($banner_title); ?></h1>
                     <p><?php echo esc_html($banner_desc); ?></p>
                     <div class="ms_banner_btn">
-                        <a href="#" class="ms_btn"><?php esc_html_e('listen now', 'miraculous-music'); ?></a>
-                        <a href="#" class="ms_btn ms_btn_h"><?php esc_html_e('add to queue', 'miraculous-music'); ?></a>
+                        <a href="#music-list" class="ms_btn"><?php esc_html_e('listen now', 'miraculous-music'); ?></a>
+                        <a href="<?php echo esc_url(home_url('/suno-music-generator')); ?>" class="ms_btn ms_btn_h"><?php esc_html_e('Generate AI Music', 'miraculous-music'); ?></a>
                     </div>
                 </div>
                 <div class="ms_banner_img">
@@ -34,124 +34,161 @@ get_header(); ?>
                 </div>
             </div>
 
-            <?php if (have_posts()) : ?>
-
-                <!----Recently Played Songs Section Start---->
+            <!----Recently Generated from Suno API---->
+            <?php
+            // Get recent music from wp_suno_history table
+            $recent_suno_history = miraculous_get_recent_music_from_history(6);
+            if (!empty($recent_suno_history)) :
+            ?>
                 <div class="ms_rcnt_slider">
                     <div class="ms_heading">
-                        <h1><?php esc_html_e('recently played', 'miraculous-music'); ?></h1>
+                        <h1><?php esc_html_e('Recently Generated from Suno AI', 'miraculous-music'); ?></h1>
                         <span class="veiw_all"><a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('view more', 'miraculous-music'); ?></a></span>
                     </div>
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
-                            <?php
-                            // Query recent music posts
-                            $recent_music = new WP_Query(array(
-                                'post_type' => 'music',
-                                'posts_per_page' => 6,
-                                'orderby' => 'date',
-                                'order' => 'DESC'
-                            ));
-
-                            if ($recent_music->have_posts()) :
-                                while ($recent_music->have_posts()) : $recent_music->the_post();
-                            ?>
+                            <?php foreach ($recent_suno_history as $song) : ?>
                                 <div class="swiper-slide">
                                     <div class="ms_rcnt_box">
                                         <div class="ms_rcnt_box_img">
-                                            <?php if (has_post_thumbnail()) : ?>
-                                                <a href="<?php the_permalink(); ?>">
-                                                    <?php the_post_thumbnail('medium', array('class' => 'img-fluid')); ?>
-                                                </a>
+                                            <?php if ($song['image_url']) : ?>
+                                                <img src="<?php echo esc_url($song['image_url']); ?>" alt="<?php echo esc_attr($song['title']); ?>" class="img-fluid">
                                             <?php else : ?>
-                                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/music/r_music1.jpg" alt="" class="img-fluid">
+                                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/music/r_music1.jpg" alt="<?php echo esc_attr($song['title']); ?>" class="img-fluid">
                                             <?php endif; ?>
                                             <div class="ms_main_overlay">
                                                 <div class="ms_box_overlay"></div>
+                                                <?php if ($song['audio_url'] || $song['video_url']) : ?>
+                                                    <div class="ms_play_icon play-suno-song"
+                                                         data-audio-url="<?php echo esc_url($song['audio_url']); ?>"
+                                                         data-video-url="<?php echo esc_url($song['video_url']); ?>"
+                                                         data-title="<?php echo esc_attr($song['title']); ?>"
+                                                         data-artist="Suno AI"
+                                                         data-poster="<?php echo esc_url($song['image_url']); ?>"
+                                                         style="cursor: pointer;">
+                                                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/play.svg" alt="">
+                                                    </div>
+                                                <?php endif; ?>
                                                 <div class="ms_more_icon">
                                                     <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/more.svg" alt="">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="ms_rcnt_box_text">
-                                            <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-                                            <p><?php the_excerpt(); ?></p>
+                                            <h3><?php echo esc_html($song['title']); ?></h3>
+                                            <p><?php echo esc_html($song['style'] ?: 'Suno AI'); ?></p>
+                                            <?php if ($song['model']) : ?>
+                                                <small class="text-muted">Model: <?php echo esc_html($song['model']); ?></small>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php
-                                endwhile;
-                                wp_reset_postdata();
-                            endif;
-                            ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                     <!-- Add Arrows -->
                     <div class="swiper-button-next5 slider_nav_next"></div>
                     <div class="swiper-button-prev5 slider_nav_prev"></div>
                 </div>
+            <?php endif; ?>
 
-                <!----Weekly Top 15 Section Start---->
-                <div class="ms_weekly_wrapper">
+            <!----All Music from Suno API---->
+            <?php
+            // Get all music from wp_suno_history table
+            $all_music_history = miraculous_get_music_from_history(array('limit' => 12));
+            $total_count = miraculous_get_history_count();
+            $max_pages = ceil($total_count / 12);
+
+            if (!empty($all_music_history)) :
+            ?>
+                <div id="music-list" class="ms_weekly_wrapper">
                     <div class="ms_heading">
-                        <h1><?php esc_html_e('weekly top 15', 'miraculous-music'); ?></h1>
-                        <span class="veiw_all"><a href="#"><?php esc_html_e('view more', 'miraculous-music'); ?></a></span>
+                        <h1><?php esc_html_e('All Music', 'miraculous-music'); ?></h1>
+                        <span class="veiw_all">
+                            <a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('view all', 'miraculous-music'); ?></a>
+                        </span>
                     </div>
-                    <div class="ms_weekly_inner">
+                    <div class="ms_weekly_inner" id="music-list-container">
                         <?php
-                        // Query top music
-                        $top_music = new WP_Query(array(
-                            'post_type' => 'music',
-                            'posts_per_page' => 15,
-                            'meta_key' => '_music_plays',
-                            'orderby' => 'meta_value_num',
-                            'order' => 'DESC'
-                        ));
-
-                        if ($top_music->have_posts()) :
-                            $counter = 1;
-                            while ($top_music->have_posts()) : $top_music->the_post();
+                        $counter = 1;
+                        foreach ($all_music_history as $song) :
+                            $has_audio = !empty($song['audio_url']);
                         ?>
-                            <div class="ms_weekly_box">
+                            <div class="ms_weekly_box" data-song-id="<?php echo esc_attr($song['id']); ?>">
                                 <div class="weekly_left">
                                     <span class="w_top_no"><?php echo $counter++; ?></span>
                                     <div class="w_top_song">
                                         <div class="w_tp_song_img">
-                                            <?php if (has_post_thumbnail()) : ?>
-                                                <?php the_post_thumbnail('thumbnail', array('class' => 'img-fluid')); ?>
+                                            <?php if ($song['image_url']) : ?>
+                                                <img src="<?php echo esc_url($song['image_url']); ?>" alt="<?php echo esc_attr($song['title']); ?>" class="img-fluid">
                                             <?php else : ?>
-                                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/weekly/song1.jpg" alt="" class="img-fluid">
+                                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/weekly/song1.jpg" alt="<?php echo esc_attr($song['title']); ?>" class="img-fluid">
                                             <?php endif; ?>
-                                            <div class="ms_song_overlay"></div>
-                                            <div class="ms_play_icon">
-                                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/play.svg" alt="">
-                                            </div>
+
+                                            <?php if ($has_audio || !empty($song['video_url'])) : ?>
+                                                <div class="ms_song_overlay"></div>
+                                                <div class="ms_play_icon play-suno-song"
+                                                     data-audio-url="<?php echo esc_url($song['audio_url']); ?>"
+                                                     data-video-url="<?php echo esc_url($song['video_url']); ?>"
+                                                     data-title="<?php echo esc_attr($song['title']); ?>"
+                                                     data-artist="Suno AI"
+                                                     data-poster="<?php echo esc_url($song['image_url']); ?>"
+                                                     style="cursor: pointer;">
+                                                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/play.svg" alt="">
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                         <div class="w_tp_song_name">
-                                            <h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-                                            <p><?php echo get_post_meta(get_the_ID(), '_music_artist', true); ?></p>
+                                            <h3><?php echo esc_html($song['title']); ?></h3>
+                                            <p><?php echo esc_html($song['style'] ?: 'Suno AI'); ?></p>
+                                            <?php if ($song['task_id']) : ?>
+                                                <small class="text-muted" style="font-size: 10px;">ID: <?php echo esc_html(substr($song['task_id'], 0, 8)); ?>...</small>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="weekly_right">
-                                    <span class="w_song_time"><?php echo get_post_meta(get_the_ID(), '_music_duration', true) ?: '3:22'; ?></span>
+                                    <?php if ($song['duration']) : ?>
+                                        <span class="w_song_time"><?php echo esc_html($song['duration']); ?></span>
+                                    <?php endif; ?>
+
+                                    <?php if ($song['task_id'] && !$has_audio) : ?>
+                                        <button type="button"
+                                                class="ms_btn load-song-by-key"
+                                                data-task-id="<?php echo esc_attr($song['task_id']); ?>"
+                                                style="font-size: 12px; padding: 5px 10px;">
+                                            <?php esc_html_e('Load', 'miraculous-music'); ?>
+                                        </button>
+                                    <?php endif; ?>
+
                                     <span class="ms_more_icon" data-other="1">
                                         <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/more.svg" alt="">
                                     </span>
                                 </div>
                             </div>
-                        <?php
-                            endwhile;
-                            wp_reset_postdata();
-                        endif;
-                        ?>
+                        <?php endforeach; ?>
                     </div>
-                </div>
 
+                    <?php if ($max_pages > 1) : ?>
+                        <div class="load-more-wrapper" style="text-align: center; margin-top: 30px;">
+                            <button type="button"
+                                    id="load-more-music"
+                                    class="ms_btn"
+                                    data-page="1"
+                                    data-max-pages="<?php echo esc_attr($max_pages); ?>">
+                                <?php esc_html_e('Load More Music', 'miraculous-music'); ?>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
             <?php else : ?>
-                <div class="ms_heading">
-                    <h1><?php esc_html_e('No content found', 'miraculous-music'); ?></h1>
-                    <p><?php esc_html_e('It seems we can\'t find what you\'re looking for.', 'miraculous-music'); ?></p>
+                <!----No Music Found---->
+                <div class="ms_heading" style="text-align: center; padding: 50px 0;">
+                    <h1><?php esc_html_e('No Music Found', 'miraculous-music'); ?></h1>
+                    <p><?php esc_html_e('Start generating music with Suno AI!', 'miraculous-music'); ?></p>
+                    <a href="<?php echo esc_url(home_url('/suno-music-generator')); ?>" class="ms_btn">
+                        <?php esc_html_e('Generate Music', 'miraculous-music'); ?>
+                    </a>
                 </div>
             <?php endif; ?>
 

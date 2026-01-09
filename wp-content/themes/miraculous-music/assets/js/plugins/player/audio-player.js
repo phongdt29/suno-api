@@ -1,4 +1,4 @@
-$(function() {
+jQuery(document).ready(function($) {
     "use strict";
     if ($('.audio-player').length) {
 		var myPlayListOtion = '<ul class="more_option"><li><a href="#"><span class="opt_icon" title="Add To Favourites"><span class="icon icon_fav"></span></span></a></li><li><a href="#"><span class="opt_icon" title="Add To Queue"><span class="icon icon_queue"></span></span></a></li><li><a href="#"><span class="opt_icon" title="Download Now"><span class="icon icon_dwn"></span></span></a></li><li><a href="#"><span class="opt_icon" title="Add To Playlist"><span class="icon icon_playlst"></span></span></a></li><li><a href="#"><span class="opt_icon" title="Share"><span class="icon icon_share"></span></span></a></li></ul>';
@@ -100,7 +100,7 @@ $(function() {
 			
         }], {
             swfPath: "js/plugins",
-            supplied: "oga, mp3",
+            supplied: "m4v, mp4, m4a, oga, mp3",
             wmode: "window",
             useStateClassSkin: true,
             autoBlur: false,
@@ -108,8 +108,13 @@ $(function() {
             keyEnabled: true,
             playlistOptions: {
                 autoPlay: false
-            }
+            },
+            solution: "html, flash"
         });
+
+        // Expose myPlaylist to window scope for Suno API integration
+        window.myPlaylist = myPlaylist;
+
         $("#jquery_jplayer_1").on($.jPlayer.event.ready + ' ' + $.jPlayer.event.play, function(event) {
             var current = myPlaylist.current;
             var playlist = myPlaylist.playlist;
