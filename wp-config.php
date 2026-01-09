@@ -89,6 +89,19 @@ define( 'WP_DEBUG', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
+// Set WordPress language to Vietnamese
+define('WPLANG', 'vi');
+
+// Or use this for full locale
+// define('WPLANG', 'vi_VN');
+
+// Suno API Development Mode
+// Set to true to use mock data instead of real API calls (no credits required)
+define('SUNO_DEV_MODE', true);
+
+// Suno API Key (optional in dev mode)
+define('SUNO_API_KEY', 'dev-key-no-credits-required');
+
 
 
 /* That's all, stop editing! Happy publishing. */

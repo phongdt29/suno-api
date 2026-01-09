@@ -256,3 +256,31 @@ msgstr "Bình luận của bạn"
 
 msgid "Post Comment"
 msgstr "Đăng bình luận"
+
+# Ranking / Leaderboard
+msgid "Bảng Xếp Hạng"
+msgstr "Bảng Xếp Hạng"
+
+msgid "views"
+msgstr "lượt xem"
+
+msgid "view all"
+msgstr "xem tất cả"
+
+msgid "weekly top 15"
+msgstr "top 15 tuần"
+
+msgid "Add To Favourites"
+msgstr "Thêm vào yêu thích"
+
+msgid "Add To Queue"
+msgstr "Thêm vào hàng chờ"
+
+msgid "Download Now"
+msgstr "Tải xuống ngay"
+
+msgid "Add To Playlist"
+msgstr "Thêm vào playlist"
+
+msgid "Share"
+msgstr "Chia sẻ"

@@ -297,19 +297,26 @@
             var title = $btn.data('title') || 'Untitled';
             var artist = $btn.data('artist') || 'Suno AI';
             var poster = $btn.data('poster') || '';
+            var songId = $btn.closest('[data-song-id]').data('song-id');
 
             console.log('Play button clicked:', {
                 audioUrl: audioUrl,
                 videoUrl: videoUrl,
                 title: title,
                 artist: artist,
-                poster: poster
+                poster: poster,
+                songId: songId
             });
 
             if (!audioUrl && !videoUrl) {
                 console.error('No audio or video URL available');
                 alert('Không có URL nhạc hoặc video để phát');
                 return;
+            }
+
+            // Track view if song ID is available
+            if (songId) {
+                SunoAPI.trackView(songId);
             }
 
             var track = {
@@ -427,6 +434,33 @@
                 error: function() {
                     alert('Request failed. Please try again.');
                     $btn.prop('disabled', false).text('Load More Music');
+                }
+            });
+        },
+
+        /**
+         * Track song view
+         */
+        trackView: function(songId) {
+            if (!songId) {
+                return;
+            }
+
+            $.ajax({
+                url: miraculousAjax.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'track_view',
+                    nonce: miraculousAjax.nonce,
+                    song_id: songId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log('View tracked:', response.data);
+                    }
+                },
+                error: function() {
+                    console.log('Failed to track view');
                 }
             });
         }

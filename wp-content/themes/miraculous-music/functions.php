@@ -290,9 +290,110 @@ function miraculous_get_api_key() {
 }
 
 /**
+ * Mock Suno API responses for development mode
+ */
+function miraculous_suno_mock_response($endpoint, $method = 'GET', $data = null) {
+    error_log('DEV MODE: Mock Suno API Request - ' . $endpoint);
+
+    // Mock response for generate endpoint
+    if (strpos($endpoint, '/api/v1/generate') !== false && $method === 'POST') {
+        $task_id = 'dev-task-' . uniqid();
+        $song_id_1 = 'dev-song-' . uniqid();
+        $song_id_2 = 'dev-song-' . uniqid();
+
+        return array(
+            'success' => true,
+            'data' => array(
+                'task_id' => $task_id,
+                'status' => 'pending',
+                'songs' => array(
+                    array(
+                        'id' => $song_id_1,
+                        'title' => ($data['prompt'] ?? 'Dev Song') . ' - Version 1',
+                        'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                        'video_url' => '',
+                        'image_url' => get_template_directory_uri() . '/assets/images/weekly/song1.jpg',
+                        'status' => 'completed',
+                        'duration' => 180,
+                        'metadata' => array(
+                            'prompt' => $data['prompt'] ?? '',
+                            'model' => $data['model'] ?? 'V4',
+                            'style' => 'Dev Mode Test'
+                        )
+                    ),
+                    array(
+                        'id' => $song_id_2,
+                        'title' => ($data['prompt'] ?? 'Dev Song') . ' - Version 2',
+                        'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+                        'video_url' => '',
+                        'image_url' => get_template_directory_uri() . '/assets/images/weekly/song2.jpg',
+                        'status' => 'completed',
+                        'duration' => 200,
+                        'metadata' => array(
+                            'prompt' => $data['prompt'] ?? '',
+                            'model' => $data['model'] ?? 'V4',
+                            'style' => 'Dev Mode Test'
+                        )
+                    )
+                )
+            ),
+            'http_code' => 200
+        );
+    }
+
+    // Mock response for credit endpoint
+    if (strpos($endpoint, '/api/v1/generate/credit') !== false) {
+        return array(
+            'success' => true,
+            'data' => array(
+                'credits' => 999999,
+                'total_credits' => 999999,
+                'used_credits' => 0,
+                'dev_mode' => true
+            ),
+            'http_code' => 200
+        );
+    }
+
+    // Mock response for get task/song by ID
+    if (strpos($endpoint, '/api/v1/generate/') !== false && $method === 'GET') {
+        return array(
+            'success' => true,
+            'data' => array(
+                'status' => 'completed',
+                'songs' => array(
+                    array(
+                        'id' => 'dev-song-' . uniqid(),
+                        'title' => 'Dev Mode Song',
+                        'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+                        'video_url' => '',
+                        'image_url' => get_template_directory_uri() . '/assets/images/weekly/song3.jpg',
+                        'status' => 'completed',
+                        'duration' => 190
+                    )
+                )
+            ),
+            'http_code' => 200
+        );
+    }
+
+    // Default mock response
+    return array(
+        'success' => true,
+        'data' => array('dev_mode' => true, 'message' => 'Mock response'),
+        'http_code' => 200
+    );
+}
+
+/**
  * Make request to Suno API
  */
 function miraculous_suno_api_request($endpoint, $method = 'GET', $data = null) {
+    // Check if dev mode is enabled
+    if (defined('SUNO_DEV_MODE') && SUNO_DEV_MODE === true) {
+        return miraculous_suno_mock_response($endpoint, $method, $data);
+    }
+
     $api_url = miraculous_get_api_url();
     $api_key = miraculous_get_api_key();
 
@@ -643,6 +744,141 @@ function miraculous_get_history_count($args = array()) {
 }
 
 /**
+ * Increment view count for a song
+ *
+ * @param int $song_id The song history ID
+ * @return bool Success status
+ */
+function miraculous_increment_song_views($song_id) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'suno_history';
+
+    $result = $wpdb->query($wpdb->prepare(
+        "UPDATE $table_name SET views = views + 1 WHERE id = %d",
+        $song_id
+    ));
+
+    return $result !== false;
+}
+
+/**
+ * Get top songs by views
+ *
+ * @param int $limit Number of songs to return
+ * @return array Music list ordered by views
+ */
+function miraculous_get_top_songs_by_views($limit = 10) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'suno_history';
+
+    // Get top songs by views
+    $results = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM $table_name
+        WHERE status = 'completed'
+        AND songs IS NOT NULL
+        AND songs != ''
+        ORDER BY views DESC, created_at DESC
+        LIMIT %d",
+        $limit
+    ));
+
+    if (empty($results)) {
+        return array();
+    }
+
+    $music_list = array();
+
+    foreach ($results as $row) {
+        // Decode songs JSON
+        $songs = !empty($row->songs) ? json_decode($row->songs, true) : null;
+
+        // If songs array exists, use first song
+        if (is_array($songs) && !empty($songs)) {
+            $song = $songs[0]; // Use first song for ranking
+            $music_list[] = array(
+                'id' => $row->id,
+                'task_id' => $row->task_id,
+                'title' => !empty($song['title']) ? $song['title'] : $row->title,
+                'audio_url' => $song['audio_url'] ?? '',
+                'image_url' => $song['image_url'] ?? '',
+                'video_url' => $song['video_url'] ?? '',
+                'duration' => $song['duration'] ?? '',
+                'prompt' => $row->prompt,
+                'lyrics' => $row->lyrics,
+                'style' => $row->style,
+                'model' => $row->model,
+                'status' => $row->status,
+                'created_at' => $row->created_at,
+                'views' => $row->views ?? 0,
+                'song_id' => $song['id'] ?? '',
+            );
+        }
+    }
+
+    return $music_list;
+}
+
+/**
+ * Get music by style/genre from wp_suno_history
+ *
+ * @param string $style Style/genre to filter by
+ * @param int $limit Number of songs to retrieve
+ * @return array Music list
+ */
+function miraculous_get_music_by_style($style, $limit = 6) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'suno_history';
+
+    // Query for songs with matching style
+    $query = $wpdb->prepare(
+        "SELECT * FROM $table_name
+        WHERE status = 'completed'
+        AND (style LIKE %s OR title LIKE %s)
+        ORDER BY created_at DESC
+        LIMIT %d",
+        '%' . $wpdb->esc_like($style) . '%',
+        '%' . $wpdb->esc_like($style) . '%',
+        $limit
+    );
+
+    $results = $wpdb->get_results($query, ARRAY_A);
+
+    if (empty($results)) {
+        return array();
+    }
+
+    // Process results to extract song data
+    $music_list = array();
+    foreach ($results as $row) {
+        // Decode songs JSON
+        $songs = json_decode($row['songs'], true);
+
+        if (!empty($songs) && is_array($songs)) {
+            foreach ($songs as $song) {
+                $music_list[] = array(
+                    'id' => $row['id'],
+                    'task_id' => $row['task_id'],
+                    'title' => !empty($song['title']) ? $song['title'] : $row['title'],
+                    'style' => $row['style'],
+                    'model' => $row['model'],
+                    'audio_url' => $song['audio_url'] ?? '',
+                    'video_url' => $song['video_url'] ?? '',
+                    'image_url' => $song['image_url'] ?? $song['image_large_url'] ?? '',
+                    'duration' => isset($song['metadata']['duration']) ? gmdate('i:s', $song['metadata']['duration']) : '',
+                    'created_at' => $row['created_at'],
+                );
+
+                if (count($music_list) >= $limit) {
+                    break 2;
+                }
+            }
+        }
+    }
+
+    return $music_list;
+}
+
+/**
  * Get top played music
  */
 function miraculous_get_top_music($limit = 15) {
@@ -838,6 +1074,40 @@ function miraculous_ajax_load_more_music() {
 }
 add_action('wp_ajax_load_more_music', 'miraculous_ajax_load_more_music');
 add_action('wp_ajax_nopriv_load_more_music', 'miraculous_ajax_load_more_music');
+
+/**
+ * AJAX: Track song view
+ */
+function miraculous_ajax_track_view() {
+    check_ajax_referer('miraculous_ajax', 'nonce');
+
+    $song_id = isset($_POST['song_id']) ? absint($_POST['song_id']) : 0;
+
+    if ($song_id <= 0) {
+        wp_send_json_error(array('message' => 'Invalid song ID'));
+        return;
+    }
+
+    $result = miraculous_increment_song_views($song_id);
+
+    if ($result) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'suno_history';
+        $views = $wpdb->get_var($wpdb->prepare(
+            "SELECT views FROM $table_name WHERE id = %d",
+            $song_id
+        ));
+
+        wp_send_json_success(array(
+            'message' => 'View tracked',
+            'views' => $views
+        ));
+    } else {
+        wp_send_json_error(array('message' => 'Failed to track view'));
+    }
+}
+add_action('wp_ajax_track_view', 'miraculous_ajax_track_view');
+add_action('wp_ajax_nopriv_track_view', 'miraculous_ajax_track_view');
 
 /**
  * Enqueue AJAX script
