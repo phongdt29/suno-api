@@ -60,6 +60,7 @@ function miraculous_music_scripts() {
     wp_enqueue_style('mCustomScrollbar', get_template_directory_uri() . '/assets/js/plugins/scroll/jquery.mCustomScrollbar.css', array(), $theme_version);
     wp_enqueue_style('miraculous-style', get_template_directory_uri() . '/assets/css/style.css', array(), $theme_version);
     wp_enqueue_style('suno-player-fix', get_template_directory_uri() . '/assets/css/suno-player-fix.css', array('miraculous-style'), $theme_version);
+    wp_enqueue_style('auth-modal', get_template_directory_uri() . '/assets/css/auth-modal.css', array('miraculous-style'), $theme_version);
 
     // Scripts
     wp_enqueue_script('jquery');
@@ -74,6 +75,16 @@ function miraculous_music_scripts() {
     wp_enqueue_script('mCustomScrollbar', get_template_directory_uri() . '/assets/js/plugins/scroll/jquery.mCustomScrollbar.js', array('jquery'), $theme_version, true);
     wp_enqueue_script('miraculous-custom', get_template_directory_uri() . '/assets/js/custom.js', array('jquery'), $theme_version, true);
     wp_enqueue_script('suno-api-js', get_template_directory_uri() . '/assets/js/suno-api.js', array('jquery', 'miraculous-custom'), $theme_version, true);
+    wp_enqueue_script('auth-js', get_template_directory_uri() . '/assets/js/auth.js', array('jquery', 'miraculous-custom'), $theme_version, true);
+
+    // Localize script immediately after enqueue
+    wp_localize_script('miraculous-custom', 'miraculousAjax', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('miraculous_ajax'),
+        'api_url' => miraculous_get_api_url(),
+        'home_url' => home_url('/'),
+        'theme_url' => get_template_directory_uri(),
+    ));
 }
 add_action('wp_enqueue_scripts', 'miraculous_music_scripts');
 
@@ -132,6 +143,113 @@ function miraculous_music_widgets_init() {
     ));
 }
 add_action('widgets_init', 'miraculous_music_widgets_init');
+
+/**
+ * Theme Customizer Settings
+ */
+function miraculous_music_customize_register($wp_customize) {
+    // Banner Section
+    $wp_customize->add_section('miraculous_banner', array(
+        'title'    => __('Banner Settings', 'miraculous-music'),
+        'priority' => 30,
+    ));
+
+    $wp_customize->add_setting('banner_title', array(
+        'default'           => 'Listen Millions of songs for Free!',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('banner_title', array(
+        'label'   => __('Banner Title', 'miraculous-music'),
+        'section' => 'miraculous_banner',
+        'type'    => 'text',
+    ));
+
+    $wp_customize->add_setting('banner_description', array(
+        'default'           => 'Nowhere else provides the most listening services than here. Enjoy Your day!',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('banner_description', array(
+        'label'   => __('Banner Description', 'miraculous-music'),
+        'section' => 'miraculous_banner',
+        'type'    => 'textarea',
+    ));
+
+    $wp_customize->add_setting('banner_background', array(
+        'default'           => get_template_directory_uri() . '/assets/images/banner.png',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_background', array(
+        'label'   => __('Banner Image', 'miraculous-music'),
+        'section' => 'miraculous_banner',
+    )));
+
+    // Advertisement Section
+    $wp_customize->add_section('miraculous_advertisement', array(
+        'title'    => __('Advertisement Settings', 'miraculous-music'),
+        'priority' => 35,
+    ));
+
+    // Advertisement 1
+    $wp_customize->add_setting('show_adv_banner', array(
+        'default'           => true,
+        'sanitize_callback' => 'wp_validate_boolean',
+    ));
+    $wp_customize->add_control('show_adv_banner', array(
+        'label'   => __('Show Advertisement 1', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+        'type'    => 'checkbox',
+    ));
+
+    $wp_customize->add_setting('adv_banner_image', array(
+        'default'           => get_template_directory_uri() . '/assets/images/adv.jpg',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'adv_banner_image', array(
+        'label'   => __('Advertisement 1 Image', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+    )));
+
+    $wp_customize->add_setting('adv_banner_link', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('adv_banner_link', array(
+        'label'   => __('Advertisement 1 Link', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+        'type'    => 'url',
+    ));
+
+    // Advertisement 2
+    $wp_customize->add_setting('show_adv_banner_2', array(
+        'default'           => true,
+        'sanitize_callback' => 'wp_validate_boolean',
+    ));
+    $wp_customize->add_control('show_adv_banner_2', array(
+        'label'   => __('Show Advertisement 2', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+        'type'    => 'checkbox',
+    ));
+
+    $wp_customize->add_setting('adv_banner_image_2', array(
+        'default'           => get_template_directory_uri() . '/assets/images/adv1.jpg',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'adv_banner_image_2', array(
+        'label'   => __('Advertisement 2 Image', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+    )));
+
+    $wp_customize->add_setting('adv_banner_link_2', array(
+        'default'           => '#',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control('adv_banner_link_2', array(
+        'label'   => __('Advertisement 2 Link', 'miraculous-music'),
+        'section' => 'miraculous_advertisement',
+        'type'    => 'url',
+    ));
+}
+add_action('customize_register', 'miraculous_music_customize_register');
 
 /**
  * Register Custom Post Types
@@ -879,6 +997,139 @@ function miraculous_get_music_by_style($style, $limit = 6) {
 }
 
 /**
+ * Search Suno music in history
+ *
+ * @param string $query Search query
+ * @param array $args Search arguments
+ * @return array Search results
+ */
+function miraculous_search_suno_music($query, $args = array()) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'suno_history';
+
+    $defaults = array(
+        'search_title'  => true,
+        'search_style'  => false,
+        'search_lyrics' => false,
+        'limit'         => 20,
+        'offset'        => 0,
+    );
+
+    $args = wp_parse_args($args, $defaults);
+
+    // Sanitize query
+    $query = sanitize_text_field($query);
+    if (empty($query)) {
+        return array();
+    }
+
+    // Build WHERE conditions
+    $search_conditions = array();
+    $search_like = '%' . $wpdb->esc_like($query) . '%';
+
+    if ($args['search_title']) {
+        $search_conditions[] = $wpdb->prepare("title LIKE %s", $search_like);
+        $search_conditions[] = $wpdb->prepare("songs LIKE %s", $search_like);
+    }
+
+    if ($args['search_style']) {
+        $search_conditions[] = $wpdb->prepare("style LIKE %s", $search_like);
+    }
+
+    if ($args['search_lyrics']) {
+        $search_conditions[] = $wpdb->prepare("lyrics LIKE %s", $search_like);
+    }
+
+    // If no conditions, search all
+    if (empty($search_conditions)) {
+        $search_conditions[] = $wpdb->prepare("title LIKE %s", $search_like);
+    }
+
+    $where_search = '(' . implode(' OR ', $search_conditions) . ')';
+
+    // Build query
+    $sql = $wpdb->prepare(
+        "SELECT * FROM $table_name
+        WHERE status = 'completed'
+        AND songs IS NOT NULL
+        AND songs != ''
+        AND $where_search
+        ORDER BY views DESC, created_at DESC
+        LIMIT %d OFFSET %d",
+        $args['limit'],
+        $args['offset']
+    );
+
+    $results = $wpdb->get_results($sql);
+
+    if (empty($results)) {
+        return array();
+    }
+
+    // Process results
+    $music_list = array();
+
+    foreach ($results as $row) {
+        $songs = !empty($row->songs) ? json_decode($row->songs, true) : null;
+
+        if (is_array($songs) && !empty($songs)) {
+            foreach ($songs as $song) {
+                $music_list[] = array(
+                    'id'         => $row->id,
+                    'task_id'    => $row->task_id,
+                    'title'      => !empty($song['title']) ? $song['title'] : $row->title,
+                    'audio_url'  => $song['audio_url'] ?? '',
+                    'image_url'  => $song['image_url'] ?? $song['image_large_url'] ?? '',
+                    'video_url'  => $song['video_url'] ?? '',
+                    'duration'   => isset($song['metadata']['duration']) ? gmdate('i:s', $song['metadata']['duration']) : '',
+                    'prompt'     => $row->prompt,
+                    'lyrics'     => $row->lyrics,
+                    'style'      => $row->style,
+                    'model'      => $row->model,
+                    'status'     => $row->status,
+                    'created_at' => $row->created_at,
+                    'views'      => $row->views ?? 0,
+                    'song_id'    => $song['id'] ?? '',
+                );
+
+                if (count($music_list) >= $args['limit']) {
+                    break 2;
+                }
+            }
+        }
+    }
+
+    return $music_list;
+}
+
+/**
+ * AJAX handler for live search
+ */
+function miraculous_ajax_search_music() {
+    check_ajax_referer('miraculous_ajax', 'nonce');
+
+    $query = isset($_POST['query']) ? sanitize_text_field($_POST['query']) : '';
+
+    if (strlen($query) < 2) {
+        wp_send_json_error(array('message' => 'Query too short'));
+    }
+
+    $results = miraculous_search_suno_music($query, array(
+        'search_title' => true,
+        'search_style' => true,
+        'limit'        => 10,
+    ));
+
+    if (empty($results)) {
+        wp_send_json_success(array('results' => array(), 'message' => 'No results found'));
+    }
+
+    wp_send_json_success(array('results' => $results));
+}
+add_action('wp_ajax_miraculous_search_music', 'miraculous_ajax_search_music');
+add_action('wp_ajax_nopriv_miraculous_search_music', 'miraculous_ajax_search_music');
+
+/**
  * Get top played music
  */
 function miraculous_get_top_music($limit = 15) {
@@ -1108,18 +1359,6 @@ function miraculous_ajax_track_view() {
 }
 add_action('wp_ajax_track_view', 'miraculous_ajax_track_view');
 add_action('wp_ajax_nopriv_track_view', 'miraculous_ajax_track_view');
-
-/**
- * Enqueue AJAX script
- */
-function miraculous_enqueue_ajax_script() {
-    wp_localize_script('miraculous-custom', 'miraculousAjax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('miraculous_ajax'),
-        'api_url' => miraculous_get_api_url(),
-    ));
-}
-add_action('wp_enqueue_scripts', 'miraculous_enqueue_ajax_script');
 
 /**
  * Add Meta Box for Suno Music
@@ -1355,3 +1594,331 @@ function miraculous_api_settings_page() {
     </div>
     <?php
 }
+
+/**
+ * ========================================
+ * USER AUTHENTICATION (Login/Register)
+ * ========================================
+ */
+
+/**
+ * AJAX: User Login
+ */
+function miraculous_ajax_login() {
+    // Log request for debugging
+    error_log('miraculous_ajax_login called');
+    error_log('POST data: ' . print_r($_POST, true));
+
+    // Verify nonce
+    if (!check_ajax_referer('miraculous_login', 'login_nonce', false)) {
+        error_log('Login nonce verification failed');
+        wp_send_json_error(array('message' => 'Phiên làm việc hết hạn. Vui lòng tải lại trang.'));
+        return;
+    }
+
+    // Get credentials
+    $username = isset($_POST['username']) ? sanitize_text_field($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $remember = isset($_POST['remember']) && $_POST['remember'] === '1';
+
+    // Validate inputs
+    if (empty($username) || empty($password)) {
+        wp_send_json_error(array('message' => 'Vui lòng nhập đầy đủ thông tin đăng nhập.'));
+        return;
+    }
+
+    // Check if username is an email
+    if (is_email($username)) {
+        $user = get_user_by('email', $username);
+        if ($user) {
+            $username = $user->user_login;
+        }
+    }
+
+    // Attempt login
+    $creds = array(
+        'user_login'    => $username,
+        'user_password' => $password,
+        'remember'      => $remember,
+    );
+
+    $user = wp_signon($creds, is_ssl());
+
+    if (is_wp_error($user)) {
+        $error_code = $user->get_error_code();
+
+        switch ($error_code) {
+            case 'invalid_username':
+            case 'invalid_email':
+                $message = 'Tên đăng nhập hoặc email không tồn tại.';
+                break;
+            case 'incorrect_password':
+                $message = 'Mật khẩu không đúng.';
+                break;
+            default:
+                $message = 'Đăng nhập thất bại. Vui lòng thử lại.';
+        }
+
+        wp_send_json_error(array('message' => $message));
+        return;
+    }
+
+    // Login successful
+    wp_set_current_user($user->ID);
+    wp_set_auth_cookie($user->ID, $remember);
+
+    wp_send_json_success(array(
+        'message' => 'Đăng nhập thành công! Đang chuyển hướng...',
+        'redirect' => home_url('/'),
+        'user' => array(
+            'id' => $user->ID,
+            'name' => $user->display_name,
+            'email' => $user->user_email,
+        )
+    ));
+}
+add_action('wp_ajax_nopriv_miraculous_login', 'miraculous_ajax_login');
+
+/**
+ * AJAX: User Registration
+ */
+function miraculous_ajax_register() {
+    // Log request for debugging
+    error_log('miraculous_ajax_register called');
+    error_log('POST data: ' . print_r($_POST, true));
+
+    // Verify nonce
+    if (!check_ajax_referer('miraculous_register', 'register_nonce', false)) {
+        error_log('Register nonce verification failed');
+        wp_send_json_error(array('message' => 'Phiên làm việc hết hạn. Vui lòng tải lại trang.'));
+        return;
+    }
+
+    // Check if registration is allowed (can be overridden by theme setting)
+    $allow_registration = get_option('users_can_register') || get_theme_mod('allow_frontend_registration', true);
+    if (!$allow_registration) {
+        wp_send_json_error(array('message' => 'Đăng ký tài khoản hiện đang bị tắt.'));
+        return;
+    }
+
+    // Get form data
+    $firstname        = isset($_POST['firstname']) ? sanitize_text_field($_POST['firstname']) : '';
+    $lastname         = isset($_POST['lastname']) ? sanitize_text_field($_POST['lastname']) : '';
+    $username         = isset($_POST['username']) ? sanitize_user($_POST['username']) : '';
+    $email            = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    $password         = isset($_POST['password']) ? $_POST['password'] : '';
+    $password_confirm = isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '';
+    $terms            = isset($_POST['terms']) && $_POST['terms'] === '1';
+
+    // Validate required fields
+    if (empty($username)) {
+        wp_send_json_error(array('message' => 'Vui lòng nhập tên đăng nhập.', 'field' => 'username'));
+        return;
+    }
+
+    if (empty($email)) {
+        wp_send_json_error(array('message' => 'Vui lòng nhập địa chỉ email.', 'field' => 'email'));
+        return;
+    }
+
+    if (!is_email($email)) {
+        wp_send_json_error(array('message' => 'Địa chỉ email không hợp lệ.', 'field' => 'email'));
+        return;
+    }
+
+    if (empty($password)) {
+        wp_send_json_error(array('message' => 'Vui lòng nhập mật khẩu.', 'field' => 'password'));
+        return;
+    }
+
+    if (strlen($password) < 8) {
+        wp_send_json_error(array('message' => 'Mật khẩu phải có ít nhất 8 ký tự.', 'field' => 'password'));
+        return;
+    }
+
+    if ($password !== $password_confirm) {
+        wp_send_json_error(array('message' => 'Mật khẩu xác nhận không khớp.', 'field' => 'password_confirm'));
+        return;
+    }
+
+    if (!$terms) {
+        wp_send_json_error(array('message' => 'Vui lòng đồng ý với điều khoản sử dụng.', 'field' => 'terms'));
+        return;
+    }
+
+    // Check if username exists
+    if (username_exists($username)) {
+        wp_send_json_error(array('message' => 'Tên đăng nhập này đã được sử dụng.', 'field' => 'username'));
+        return;
+    }
+
+    // Check if email exists
+    if (email_exists($email)) {
+        wp_send_json_error(array('message' => 'Email này đã được đăng ký.', 'field' => 'email'));
+        return;
+    }
+
+    // Validate username
+    if (!validate_username($username)) {
+        wp_send_json_error(array('message' => 'Tên đăng nhập chứa ký tự không hợp lệ.', 'field' => 'username'));
+        return;
+    }
+
+    // Create user
+    $userdata = array(
+        'user_login'    => $username,
+        'user_pass'     => $password,
+        'user_email'    => $email,
+        'first_name'    => $firstname,
+        'last_name'     => $lastname,
+        'display_name'  => trim($firstname . ' ' . $lastname) ?: $username,
+        'role'          => get_option('default_role', 'subscriber'),
+    );
+
+    $user_id = wp_insert_user($userdata);
+
+    if (is_wp_error($user_id)) {
+        wp_send_json_error(array('message' => 'Không thể tạo tài khoản: ' . $user_id->get_error_message()));
+        return;
+    }
+
+    // Send welcome email
+    wp_new_user_notification($user_id, null, 'both');
+
+    // Auto login after registration
+    wp_set_current_user($user_id);
+    wp_set_auth_cookie($user_id, false);
+
+    wp_send_json_success(array(
+        'message' => 'Đăng ký thành công! Đang chuyển hướng...',
+        'redirect' => home_url('/'),
+        'user' => array(
+            'id' => $user_id,
+            'name' => trim($firstname . ' ' . $lastname) ?: $username,
+            'email' => $email,
+        )
+    ));
+}
+add_action('wp_ajax_nopriv_miraculous_register', 'miraculous_ajax_register');
+
+/**
+ * AJAX: Forgot Password
+ */
+function miraculous_ajax_forgot_password() {
+    // Verify nonce
+    if (!check_ajax_referer('miraculous_forgot', 'forgot_nonce', false)) {
+        wp_send_json_error(array('message' => 'Phiên làm việc hết hạn. Vui lòng tải lại trang.'));
+        return;
+    }
+
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(array('message' => 'Vui lòng nhập địa chỉ email hợp lệ.'));
+        return;
+    }
+
+    // Check if user exists
+    $user = get_user_by('email', $email);
+
+    if (!$user) {
+        // For security, don't reveal if email exists
+        wp_send_json_success(array(
+            'message' => 'Nếu email tồn tại trong hệ thống, bạn sẽ nhận được link đặt lại mật khẩu.'
+        ));
+        return;
+    }
+
+    // Generate reset key
+    $reset_key = get_password_reset_key($user);
+
+    if (is_wp_error($reset_key)) {
+        wp_send_json_error(array('message' => 'Không thể tạo link đặt lại mật khẩu. Vui lòng thử lại sau.'));
+        return;
+    }
+
+    // Build reset link
+    $reset_link = network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($user->user_login), 'login');
+
+    // Send email
+    $site_name = get_bloginfo('name');
+    $subject = sprintf('[%s] Đặt lại mật khẩu', $site_name);
+
+    $message = sprintf(
+        "Xin chào %s,\n\n" .
+        "Bạn đã yêu cầu đặt lại mật khẩu cho tài khoản tại %s.\n\n" .
+        "Nhấn vào link sau để đặt lại mật khẩu:\n%s\n\n" .
+        "Nếu bạn không yêu cầu điều này, vui lòng bỏ qua email này.\n\n" .
+        "Link này sẽ hết hạn sau 24 giờ.\n\n" .
+        "Trân trọng,\n%s",
+        $user->display_name,
+        $site_name,
+        $reset_link,
+        $site_name
+    );
+
+    $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+    $sent = wp_mail($email, $subject, $message, $headers);
+
+    if ($sent) {
+        wp_send_json_success(array(
+            'message' => 'Link đặt lại mật khẩu đã được gửi đến email của bạn.'
+        ));
+    } else {
+        wp_send_json_error(array('message' => 'Không thể gửi email. Vui lòng thử lại sau.'));
+    }
+}
+add_action('wp_ajax_nopriv_miraculous_forgot_password', 'miraculous_ajax_forgot_password');
+
+/**
+ * AJAX: Check username availability
+ */
+function miraculous_ajax_check_username() {
+    $username = isset($_POST['username']) ? sanitize_user($_POST['username']) : '';
+
+    if (empty($username)) {
+        wp_send_json_error(array('available' => false));
+        return;
+    }
+
+    $available = !username_exists($username) && validate_username($username);
+
+    wp_send_json_success(array(
+        'available' => $available,
+        'message' => $available ? 'Tên đăng nhập có thể sử dụng' : 'Tên đăng nhập đã tồn tại hoặc không hợp lệ'
+    ));
+}
+add_action('wp_ajax_nopriv_miraculous_check_username', 'miraculous_ajax_check_username');
+
+/**
+ * AJAX: Check email availability
+ */
+function miraculous_ajax_check_email() {
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(array('available' => false));
+        return;
+    }
+
+    $available = !email_exists($email);
+
+    wp_send_json_success(array(
+        'available' => $available,
+        'message' => $available ? 'Email có thể sử dụng' : 'Email này đã được đăng ký'
+    ));
+}
+add_action('wp_ajax_nopriv_miraculous_check_email', 'miraculous_ajax_check_email');
+
+/**
+ * AJAX: Logout
+ */
+function miraculous_ajax_logout() {
+    wp_logout();
+    wp_send_json_success(array(
+        'message' => 'Đăng xuất thành công',
+        'redirect' => home_url('/')
+    ));
+}
+add_action('wp_ajax_miraculous_logout', 'miraculous_ajax_logout');

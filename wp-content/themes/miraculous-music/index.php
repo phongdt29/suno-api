@@ -13,24 +13,27 @@ get_header(); ?>
             <!---Banner Start--->
             <?php
             // Get banner settings from customizer
-            $banner_title = get_theme_mod('banner_title', 'Listen Millions of songs for Free!');
-            $banner_desc = get_theme_mod('banner_description', 'Nowhere else provides the most listening services than here. Enjoy Your day!');
+            $banner_title = get_theme_mod('banner_title', 'Nghe hàng triệu bài hát miễn phí!');
+            $banner_desc = get_theme_mod('banner_description', 'Không nơi nào cung cấp dịch vụ nghe nhạc tốt hơn ở đây. Chúc bạn một ngày vui vẻ!');
             $banner_bg = get_theme_mod('banner_background', get_template_directory_uri() . '/assets/images/banner.png');
             ?>
-            <div class="ms_banner_wrapper">
-                <div class="ms_banner_text">
-                    <h1><?php echo esc_html($banner_title); ?></h1>
-                    <p><?php echo esc_html($banner_desc); ?></p>
-                    <div class="ms_banner_btn">
-                        <a href="#music-list" class="ms_btn"><?php esc_html_e('listen now', 'miraculous-music'); ?></a>
-                        <a href="<?php echo esc_url(home_url('/suno-music-generator')); ?>" class="ms_btn ms_btn_h"><?php esc_html_e('Generate AI Music', 'miraculous-music'); ?></a>
+            <div class="ms-banner">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="ms_banner_img">
+                                <img src="<?php echo esc_url($banner_bg); ?>" alt="" class="img-fluid">
+                            </div>
+                            <div class="ms_banner_text">
+                                <h1><?php echo esc_html($banner_title); ?></h1>
+                                <p><?php echo esc_html($banner_desc); ?></p>
+                                <div class="ms_banner_btn">
+                                    <a href="#music-list" class="ms_btn"><?php esc_html_e('Nghe ngay', 'miraculous-music'); ?></a>
+                                    <a href="<?php echo esc_url(home_url('/suno-music-generator')); ?>" class="ms_btn"><?php esc_html_e('Tạo nhạc AI', 'miraculous-music'); ?></a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="ms_banner_img">
-                    <img src="<?php echo esc_url($banner_bg); ?>" alt="" class="img-fluid">
-                </div>
-                <div class="banner_shape_img">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/shape.png" alt="" class="img-fluid">
                 </div>
             </div>
 
@@ -40,10 +43,11 @@ get_header(); ?>
             $recent_suno_history = miraculous_get_recent_music_from_history(6);
             if (!empty($recent_suno_history)) :
             ?>
+                
                 <div class="ms_rcnt_slider">
                     <div class="ms_heading">
-                        <h1><?php esc_html_e('Recently Generated from Suno AI', 'miraculous-music'); ?></h1>
-                        <span class="veiw_all"><a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('view more', 'miraculous-music'); ?></a></span>
+                        <h1><?php esc_html_e('Nhạc mới tạo từ Suno AI', 'miraculous-music'); ?></h1>
+                        <span class="veiw_all"><a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('xem thêm', 'miraculous-music'); ?></a></span>
                     </div>
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
@@ -87,8 +91,8 @@ get_header(); ?>
                         </div>
                     </div>
                     <!-- Add Arrows -->
-                    <div class="swiper-button-next5 slider_nav_next"></div>
-                    <div class="swiper-button-prev5 slider_nav_prev"></div>
+                    <div class="swiper-button-next slider_nav_next"></div>
+                    <div class="swiper-button-prev slider_nav_prev"></div>
                 </div>
             <?php endif; ?>
 
@@ -102,7 +106,7 @@ get_header(); ?>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="ms_heading">
-                                    <h1><?php esc_html_e('weekly top 15', 'miraculous-music'); ?></h1>
+                                    <h1><?php esc_html_e('Top 15 tuần', 'miraculous-music'); ?></h1>
                                 </div>
                             </div>
 
@@ -169,11 +173,11 @@ get_header(); ?>
                                                 </span>
                                             </div>
                                             <ul class="more_option">
-                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_fav"></span></span><?php esc_html_e('Add To Favourites', 'miraculous-music'); ?></a></li>
-                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_queue"></span></span><?php esc_html_e('Add To Queue', 'miraculous-music'); ?></a></li>
-                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_dwn"></span></span><?php esc_html_e('Download Now', 'miraculous-music'); ?></a></li>
-                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_playlst"></span></span><?php esc_html_e('Add To Playlist', 'miraculous-music'); ?></a></li>
-                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_share"></span></span><?php esc_html_e('Share', 'miraculous-music'); ?></a></li>
+                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_fav"></span></span><?php esc_html_e('Thêm vào yêu thích', 'miraculous-music'); ?></a></li>
+                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_queue"></span></span><?php esc_html_e('Thêm vào hàng đợi', 'miraculous-music'); ?></a></li>
+                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_dwn"></span></span><?php esc_html_e('Tải xuống', 'miraculous-music'); ?></a></li>
+                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_playlst"></span></span><?php esc_html_e('Thêm vào Playlist', 'miraculous-music'); ?></a></li>
+                                                <li><a href="#"><span class="opt_icon"><span class="icon icon_share"></span></span><?php esc_html_e('Chia sẻ', 'miraculous-music'); ?></a></li>
                                             </ul>
                                         </div>
                                         <?php if ($index < count($column_songs) - 1) : ?>
@@ -187,6 +191,26 @@ get_header(); ?>
                 </div>
             <?php endif; ?>
 
+            <!----Advertisement Section---->
+            <?php
+            $adv_image = get_theme_mod('adv_banner_image', get_template_directory_uri() . '/assets/images/adv.jpg');
+            $adv_link = get_theme_mod('adv_banner_link', '#');
+            $show_adv = get_theme_mod('show_adv_banner', true);
+            if ($show_adv && $adv_image) :
+            ?>
+            <div class="ms_advr_wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <a href="<?php echo esc_url($adv_link); ?>" target="_blank">
+                                <img src="<?php echo esc_url($adv_image); ?>" alt="<?php esc_attr_e('Advertisement', 'miraculous-music'); ?>" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!----Nhạc Tết Section---->
             <?php
             $nhac_tet = miraculous_get_music_by_style('Tết', 6);
@@ -195,7 +219,7 @@ get_header(); ?>
                 <div class="ms_rcnt_slider">
                     <div class="ms_heading">
                         <h1><?php esc_html_e('Nhạc Tết', 'miraculous-music'); ?></h1>
-                        <span class="veiw_all"><a href="?genre=tet"><?php esc_html_e('view more', 'miraculous-music'); ?></a></span>
+                        <span class="veiw_all"><a href="?genre=tet"><?php esc_html_e('xem thêm', 'miraculous-music'); ?></a></span>
                     </div>
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
@@ -236,8 +260,8 @@ get_header(); ?>
                         </div>
                     </div>
                     <!-- Add Arrows -->
-                    <div class="swiper-button-next6 slider_nav_next"></div>
-                    <div class="swiper-button-prev6 slider_nav_prev"></div>
+                    <div class="swiper-button-next slider_nav_next"></div>
+                    <div class="swiper-button-prev slider_nav_prev"></div>
                 </div>
             <?php endif; ?>
 
@@ -249,7 +273,7 @@ get_header(); ?>
                 <div class="ms_rcnt_slider">
                     <div class="ms_heading">
                         <h1><?php esc_html_e('Nhạc Bolero', 'miraculous-music'); ?></h1>
-                        <span class="veiw_all"><a href="?genre=bolero"><?php esc_html_e('view more', 'miraculous-music'); ?></a></span>
+                        <span class="veiw_all"><a href="?genre=bolero"><?php esc_html_e('xem thêm', 'miraculous-music'); ?></a></span>
                     </div>
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
@@ -290,9 +314,29 @@ get_header(); ?>
                         </div>
                     </div>
                     <!-- Add Arrows -->
-                    <div class="swiper-button-next7 slider_nav_next"></div>
-                    <div class="swiper-button-prev7 slider_nav_prev"></div>
+                    <div class="swiper-button-next slider_nav_next"></div>
+                    <div class="swiper-button-prev slider_nav_prev"></div>
                 </div>
+            <?php endif; ?>
+
+            <!----Advertisement Section 2---->
+            <?php
+            $adv2_image = get_theme_mod('adv_banner_image_2', get_template_directory_uri() . '/assets/images/adv1.jpg');
+            $adv2_link = get_theme_mod('adv_banner_link_2', '#');
+            $show_adv2 = get_theme_mod('show_adv_banner_2', true);
+            if ($show_adv2 && $adv2_image) :
+            ?>
+            <div class="ms_advr_wrapper ms_advr2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <a href="<?php echo esc_url($adv2_link); ?>" target="_blank">
+                                <img src="<?php echo esc_url($adv2_image); ?>" alt="<?php esc_attr_e('Advertisement', 'miraculous-music'); ?>" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <?php endif; ?>
 
             <!----All Music from Suno API---->
@@ -306,9 +350,9 @@ get_header(); ?>
             ?>
                 <div id="music-list" class="ms_weekly_wrapper">
                     <div class="ms_heading">
-                        <h1><?php esc_html_e('All Music', 'miraculous-music'); ?></h1>
+                        <h1><?php esc_html_e('Tất cả bài hát', 'miraculous-music'); ?></h1>
                         <span class="veiw_all">
-                            <a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('view all', 'miraculous-music'); ?></a>
+                            <a href="<?php echo esc_url(home_url('/music')); ?>"><?php esc_html_e('xem tất cả', 'miraculous-music'); ?></a>
                         </span>
                     </div>
                     <div class="ms_weekly_inner" id="music-list-container">
@@ -360,7 +404,7 @@ get_header(); ?>
                                                 class="ms_btn load-song-by-key"
                                                 data-task-id="<?php echo esc_attr($song['task_id']); ?>"
                                                 style="font-size: 12px; padding: 5px 10px;">
-                                            <?php esc_html_e('Load', 'miraculous-music'); ?>
+                                            <?php esc_html_e('Tải', 'miraculous-music'); ?>
                                         </button>
                                     <?php endif; ?>
 
@@ -379,7 +423,7 @@ get_header(); ?>
                                     class="ms_btn"
                                     data-page="1"
                                     data-max-pages="<?php echo esc_attr($max_pages); ?>">
-                                <?php esc_html_e('Load More Music', 'miraculous-music'); ?>
+                                <?php esc_html_e('Tải thêm nhạc', 'miraculous-music'); ?>
                             </button>
                         </div>
                     <?php endif; ?>
@@ -387,10 +431,10 @@ get_header(); ?>
             <?php else : ?>
                 <!----No Music Found---->
                 <div class="ms_heading" style="text-align: center; padding: 50px 0;">
-                    <h1><?php esc_html_e('No Music Found', 'miraculous-music'); ?></h1>
-                    <p><?php esc_html_e('Start generating music with Suno AI!', 'miraculous-music'); ?></p>
+                    <h1><?php esc_html_e('Không tìm thấy nhạc', 'miraculous-music'); ?></h1>
+                    <p><?php esc_html_e('Bắt đầu tạo nhạc với Suno AI!', 'miraculous-music'); ?></p>
                     <a href="<?php echo esc_url(home_url('/suno-music-generator')); ?>" class="ms_btn">
-                        <?php esc_html_e('Generate Music', 'miraculous-music'); ?>
+                        <?php esc_html_e('Tạo nhạc', 'miraculous-music'); ?>
                     </a>
                 </div>
             <?php endif; ?>

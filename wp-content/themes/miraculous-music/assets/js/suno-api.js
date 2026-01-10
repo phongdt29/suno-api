@@ -489,6 +489,213 @@
                 console.warn('Playlist not available');
             }
         });
+
+        // Initialize Live Search
+        LiveSearch.init();
     });
+
+    /**
+     * Live Search Module
+     */
+    var LiveSearch = {
+        searchTimer: null,
+        minChars: 2,
+        delay: 300,
+
+        init: function() {
+            this.bindEvents();
+        },
+
+        bindEvents: function() {
+            var self = this;
+
+            // Input event for live search
+            $('#header-search-input').on('input', function() {
+                var query = $(this).val().trim();
+
+                clearTimeout(self.searchTimer);
+
+                if (query.length < self.minChars) {
+                    self.hideDropdown();
+                    return;
+                }
+
+                self.searchTimer = setTimeout(function() {
+                    self.performSearch(query);
+                }, self.delay);
+            });
+
+            // Focus event
+            $('#header-search-input').on('focus', function() {
+                var query = $(this).val().trim();
+                if (query.length >= self.minChars) {
+                    self.showDropdown();
+                }
+            });
+
+            // Click outside to close
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.ms_top_search').length) {
+                    self.hideDropdown();
+                }
+            });
+
+            // Play button in search results
+            $(document).on('click', '.search-result-play', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var $item = $(this).closest('.search-result-item');
+                var audioUrl = $item.data('audio-url');
+                var videoUrl = $item.data('video-url');
+                var title = $item.data('title');
+                var poster = $item.data('poster');
+
+                if (audioUrl || videoUrl) {
+                    SunoAPI.addToJPlayer({
+                        title: title,
+                        audio_url: audioUrl,
+                        video_url: videoUrl,
+                        image_url: poster
+                    });
+
+                    // Play immediately
+                    if (typeof window.myPlaylist !== 'undefined') {
+                        var lastIndex = window.myPlaylist.playlist.length - 1;
+                        window.myPlaylist.play(lastIndex);
+                    }
+                }
+
+                self.hideDropdown();
+            });
+
+            // Click on result item (go to search page)
+            $(document).on('click', '.search-result-item', function(e) {
+                if ($(e.target).closest('.search-result-play').length) {
+                    return;
+                }
+
+                var query = $('#header-search-input').val().trim();
+                if (query) {
+                    window.location.href = miraculousAjax.home_url + '?s=' + encodeURIComponent(query);
+                }
+            });
+
+            // Enter key to submit search
+            $('#header-search-input').on('keypress', function(e) {
+                if (e.which === 13) {
+                    self.hideDropdown();
+                }
+            });
+        },
+
+        performSearch: function(query) {
+            var self = this;
+
+            this.showLoading();
+
+            $.ajax({
+                url: miraculousAjax.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'miraculous_search_music',
+                    nonce: miraculousAjax.nonce,
+                    query: query
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.displayResults(response.data.results, query);
+                    } else {
+                        self.showNoResults();
+                    }
+                },
+                error: function() {
+                    self.showNoResults();
+                }
+            });
+        },
+
+        displayResults: function(results, query) {
+            var $dropdown = $('#live-search-results');
+            var $inner = $dropdown.find('.search-results-inner');
+            var defaultImg = (typeof miraculousAjax !== 'undefined' && miraculousAjax.theme_url)
+                ? miraculousAjax.theme_url + '/assets/images/music/r_music1.jpg'
+                : '';
+            var playIcon = (typeof miraculousAjax !== 'undefined' && miraculousAjax.theme_url)
+                ? miraculousAjax.theme_url + '/assets/images/svg/play.svg'
+                : '';
+
+            if (!results || results.length === 0) {
+                this.showNoResults();
+                return;
+            }
+
+            var html = '';
+
+            $.each(results.slice(0, 8), function(index, song) {
+                var imgUrl = song.image_url || defaultImg;
+                var hasAudio = song.audio_url || song.video_url;
+
+                html += '<div class="search-result-item" ';
+                html += 'data-audio-url="' + (song.audio_url || '') + '" ';
+                html += 'data-video-url="' + (song.video_url || '') + '" ';
+                html += 'data-title="' + (song.title || 'Untitled') + '" ';
+                html += 'data-poster="' + imgUrl + '">';
+
+                html += '<div class="search-result-img">';
+                html += '<img src="' + imgUrl + '" alt="">';
+                html += '</div>';
+
+                html += '<div class="search-result-info">';
+                html += '<div class="search-result-title">' + (song.title || 'Untitled') + '</div>';
+                html += '<div class="search-result-style">' + (song.style || 'Suno AI') + '</div>';
+                html += '</div>';
+
+                if (hasAudio) {
+                    html += '<div class="search-result-play">';
+                    html += '<img src="' + playIcon + '" alt="Play">';
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            });
+
+            // View all link
+            var homeUrl = (typeof miraculousAjax !== 'undefined' && miraculousAjax.home_url)
+                ? miraculousAjax.home_url
+                : '/';
+            html += '<a href="' + homeUrl + '?s=' + encodeURIComponent(query) + '" class="search-view-all">';
+            html += 'View all results for "' + query + '"';
+            html += '</a>';
+
+            $inner.html(html);
+            this.showDropdown();
+        },
+
+        showLoading: function() {
+            var $dropdown = $('#live-search-results');
+            var $inner = $dropdown.find('.search-results-inner');
+            $inner.html('<div class="search-loading"><i class="fa fa-spinner fa-spin"></i> Searching...</div>');
+            this.showDropdown();
+        },
+
+        showNoResults: function() {
+            var $dropdown = $('#live-search-results');
+            var $inner = $dropdown.find('.search-results-inner');
+            $inner.html('<div class="search-no-results">No results found</div>');
+            this.showDropdown();
+        },
+
+        showDropdown: function() {
+            $('#live-search-results').slideDown(200);
+        },
+
+        hideDropdown: function() {
+            $('#live-search-results').slideUp(200);
+        }
+    };
+
+    // Expose LiveSearch globally
+    window.LiveSearch = LiveSearch;
 
 })(jQuery);

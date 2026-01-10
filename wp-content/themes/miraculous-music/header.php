@@ -50,15 +50,19 @@
 		<div class="ms_header">
 			<div class="ms_top_left">
 				<div class="ms_top_search">
-					<form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
-						<input type="text" class="form-control" name="s" placeholder="<?php esc_attr_e('Search Music Here..', 'miraculous-music'); ?>" value="<?php echo get_search_query(); ?>">
+					<form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>" id="header-search-form">
+						<input type="text" class="form-control" name="s" id="header-search-input" placeholder="<?php esc_attr_e('Tìm kiếm nhạc...', 'miraculous-music'); ?>" value="<?php echo get_search_query(); ?>" autocomplete="off">
 						<span class="search_icon">
 							<img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/search.svg" alt="">
 						</span>
 					</form>
+					<!-- Live Search Results Dropdown -->
+					<div id="live-search-results" class="ms_live_search_dropdown" style="display: none;">
+						<div class="search-results-inner"></div>
+					</div>
 				</div>
 				<div class="ms_top_trend">
-					<span><a href="#" class="ms_color"><?php esc_html_e('Trending Songs :', 'miraculous-music'); ?></a></span>
+					<span><a href="#" class="ms_color"><?php esc_html_e('Bài hát thịnh hành :', 'miraculous-music'); ?></a></span>
 					<span class="top_marquee">
 						<a href="#">
 							<?php
@@ -75,15 +79,15 @@
 					<?php dynamic_sidebar('header-widgets'); ?>
 				<?php else : ?>
 					<div class="ms_top_lang">
-						<span data-bs-toggle="modal" data-bs-target="#lang_modal"><?php esc_html_e('languages', 'miraculous-music'); ?> <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/lang.svg" alt=""></span>
+						<span data-bs-toggle="modal" data-bs-target="#lang_modal"><?php esc_html_e('Ngôn ngữ', 'miraculous-music'); ?> <img src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/lang.svg" alt=""></span>
 					</div>
 					<div class="ms_top_btn">
 						<?php if (is_user_logged_in()) : ?>
-							<a href="<?php echo wp_logout_url(home_url()); ?>" class="ms_btn reg_btn"><span><?php esc_html_e('Logout', 'miraculous-music'); ?></span></a>
-							<a href="<?php echo get_edit_user_link(); ?>" class="ms_btn"><?php esc_html_e('Profile', 'miraculous-music'); ?></a>
+							<a href="<?php echo wp_logout_url(home_url()); ?>" class="ms_btn reg_btn"><span><?php esc_html_e('Đăng xuất', 'miraculous-music'); ?></span></a>
+							<a href="<?php echo esc_url(home_url('/ho-so')); ?>" class="ms_btn"><?php esc_html_e('Hồ sơ', 'miraculous-music'); ?></a>
 						<?php else : ?>
-							<a href="<?php echo wp_registration_url(); ?>" class="ms_btn reg_btn" data-bs-toggle="modal" data-bs-target="#myModal"><span><?php esc_html_e('register', 'miraculous-music'); ?></span></a>
-							<a href="<?php echo wp_login_url(); ?>" class="ms_btn" data-bs-toggle="modal" data-bs-target="#myModal1"><?php esc_html_e('login', 'miraculous-music'); ?></a>
+							<a href="<?php echo esc_url(home_url('/dang-ky')); ?>" class="ms_btn reg_btn"><span><?php esc_html_e('Đăng ký', 'miraculous-music'); ?></span></a>
+							<a href="<?php echo esc_url(home_url('/dang-nhap')); ?>" class="ms_btn"><?php esc_html_e('Đăng nhập', 'miraculous-music'); ?></a>
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>

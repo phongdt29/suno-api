@@ -93,11 +93,11 @@ define( 'WP_DEBUG', true );
 define('WPLANG', 'vi');
 
 // Or use this for full locale
-// define('WPLANG', 'vi_VN');
+define('WPLANG', 'vi_VN');
 
 // Suno API Development Mode
 // Set to true to use mock data instead of real API calls (no credits required)
-define('SUNO_DEV_MODE', true);
+define('SUNO_DEV_MODE', false);
 
 // Suno API Key (optional in dev mode)
 define('SUNO_API_KEY', 'dev-key-no-credits-required');

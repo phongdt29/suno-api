@@ -1,0 +1,1271 @@
+/**
+ * Auth Modal Styles - Login, Register, Forgot Password
+ *
+ * @package Miraculous_Music
+ * @since 1.0.0
+ */
+
+/* ========================================
+   Modal Base Styles (Override theme defaults)
+   ======================================== */
+.ms_auth_modal .modal-dialog {
+    max-width: 450px !important;
+    margin: 1.75rem auto !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+}
+
+.ms_auth_modal .modal-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    background-image: none !important;
+    border: 1px solid rgba(255, 72, 101, 0.2) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+.ms_auth_modal .modal-body {
+    padding: 0 !important;
+}
+
+/* Close Button */
+.ms_modal_close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.ms_modal_close:hover {
+    background: rgba(255, 72, 101, 0.3);
+    transform: rotate(90deg);
+}
+
+/* ========================================
+   Auth Wrapper
+   ======================================== */
+.ms_auth_wrapper {
+    padding: 40px 35px;
+}
+
+.ms_auth_header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.ms_auth_header h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ff4865 0%, #e0405a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ms_auth_header p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ========================================
+   Form Styles
+   ======================================== */
+.ms_auth_form {
+    margin-bottom: 20px;
+}
+
+.ms_form_group {
+    margin-bottom: 20px;
+}
+
+.ms_form_group label {
+    display: block;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.ms_form_group label .required {
+    color: #ff6b6b;
+}
+
+.ms_form_input {
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0 20px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.ms_form_input::placeholder {
+    color: #666;
+}
+
+.ms_form_input:focus {
+    outline: none;
+    border-color: #ff4865;
+    background: rgba(255, 72, 101, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 72, 101, 0.1);
+}
+
+.ms_form_input.is-invalid {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.05);
+}
+
+.ms_form_input.is-valid {
+    border-color: #51cf66;
+    background: rgba(81, 207, 102, 0.05);
+}
+
+/* Form Row */
+.ms_form_row {
+    display: flex;
+    gap: 15px;
+}
+
+.ms_form_group.ms_half {
+    flex: 1;
+}
+
+/* Password Wrapper */
+.ms_password_wrapper {
+    position: relative;
+}
+
+.ms_password_wrapper .ms_form_input {
+    padding-right: 50px;
+}
+
+.ms_toggle_password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.ms_toggle_password:hover {
+    color: #ff4865;
+}
+
+/* Password Strength */
+.ms_password_strength {
+    margin-top: 8px;
+}
+
+.ms_password_strength .strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.ms_password_strength .strength-fill {
+    display: block;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.ms_password_strength.weak .strength-fill {
+    background: #ff6b6b;
+}
+
+.ms_password_strength.medium .strength-fill {
+    background: #ffd43b;
+}
+
+.ms_password_strength.strong .strength-fill {
+    background: #51cf66;
+}
+
+.ms_password_strength .strength-text {
+    font-size: 12px;
+}
+
+.ms_password_strength.weak .strength-text {
+    color: #ff6b6b;
+}
+
+.ms_password_strength.medium .strength-text {
+    color: #ffd43b;
+}
+
+.ms_password_strength.strong .strength-text {
+    color: #51cf66;
+}
+
+/* ========================================
+   Form Options
+   ======================================== */
+.ms_form_options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ms_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.ms_checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ff4865;
+    cursor: pointer;
+}
+
+.ms_checkbox a {
+    color: #ff4865;
+    text-decoration: none;
+}
+
+.ms_checkbox a:hover {
+    text-decoration: underline;
+}
+
+.ms_forgot_link {
+    color: #ff4865;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.ms_forgot_link:hover {
+    color: #fff;
+}
+
+/* ========================================
+   Form Messages
+   ======================================== */
+.ms_form_message {
+    margin-bottom: 20px;
+    display: none;
+}
+
+.ms_alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.ms_alert.alert-success {
+    background: rgba(81, 207, 102, 0.15);
+    border: 1px solid rgba(81, 207, 102, 0.3);
+    color: #51cf66;
+}
+
+.ms_alert.alert-error {
+    background: rgba(255, 107, 107, 0.15);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: #ff6b6b;
+}
+
+/* ========================================
+   Auth Button
+   ======================================== */
+.ms_auth_btn {
+    width: 100%;
+    height: 50px;
+    background-color: #ff4865;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.ms_auth_btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 72, 101, 0.3);
+    background-color: #e0405a;
+}
+
+.ms_auth_btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ms_auth_btn .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ms_auth_btn .btn-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   Divider
+   ======================================== */
+.ms_auth_divider {
+    position: relative;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.ms_auth_divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ms_auth_divider span {
+    background: #1a1a2e;
+    padding: 0 15px;
+    color: #666;
+    font-size: 13px;
+    position: relative;
+}
+
+/* ========================================
+   Social Login
+   ======================================== */
+.ms_social_login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ms_social_btn {
+    width: 100%;
+    height: 45px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.ms_social_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ms_google_btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.ms_google_btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #db4437;
+}
+
+.ms_google_btn i {
+    color: #db4437;
+}
+
+.ms_facebook_btn {
+    background: rgba(59, 89, 152, 0.2);
+    color: #fff;
+}
+
+.ms_facebook_btn:hover:not(:disabled) {
+    background: rgba(59, 89, 152, 0.4);
+    border-color: #3b5998;
+}
+
+.ms_facebook_btn i {
+    color: #3b5998;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+.ms_auth_footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ms_auth_footer p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+.ms_auth_footer a {
+    color: #ff4865;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.ms_auth_footer a:hover {
+    color: #fff;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 576px) {
+    .ms_auth_modal .modal-dialog {
+        margin: 10px;
+    }
+
+    .ms_auth_wrapper {
+        padding: 30px 20px;
+    }
+
+    .ms_auth_header h2 {
+        font-size: 24px;
+    }
+
+    .ms_form_row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .ms_form_options {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+
+/* ========================================
+   Modal Base (Override Bootstrap)
+   ======================================== */
+.ms_auth_modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 99999 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    display: none !important;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.ms_auth_modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================
+   Modal Dialog Animation
+   ======================================== */
+.ms_auth_modal .modal-dialog {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    margin: 1.75rem auto !important;
+    top: auto !important;
+    left: auto !important;
+    transform: scale(0.9) translateY(-30px) !important;
+    -webkit-transform: scale(0.9) translateY(-30px) !important;
+    opacity: 0;
+    transition: all 0.3s ease !important;
+    pointer-events: none;
+}
+
+.ms_auth_modal.show .modal-dialog {
+    transform: scale(1) translateY(0) !important;
+    -webkit-transform: scale(1) translateY(0) !important;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Backdrop */
+.modal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 99998 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.modal-backdrop.fade {
+    opacity: 0;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+}
+
+/* Body when modal is open */
+body.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+
+/* ========================================
+   Auth Page Styles (for standalone pages)
+   ======================================== */
+.ms_auth_page_wrapper {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(255, 72, 101, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    padding: 40px 35px;
+    margin-bottom: 50px;
+}
+
+.ms_auth_page_wrapper .ms_auth_header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.ms_auth_page_wrapper .ms_auth_header h1 {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ff4865 0%, #e0405a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ms_auth_page_wrapper .ms_auth_header p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+.ms_auth_page_wrapper .ms_form_group {
+    margin-bottom: 20px;
+}
+
+.ms_auth_page_wrapper .ms_form_group label {
+    display: block;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.ms_auth_page_wrapper .ms_form_group label .required {
+    color: #ff6b6b;
+}
+
+.ms_auth_page_wrapper .ms_form_input {
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0 20px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.ms_auth_page_wrapper .ms_form_input::placeholder {
+    color: #666;
+}
+
+.ms_auth_page_wrapper .ms_form_input:focus {
+    outline: none;
+    border-color: #ff4865;
+    background: rgba(255, 72, 101, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 72, 101, 0.1);
+}
+
+.ms_auth_page_wrapper .ms_form_input.is-invalid {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.05);
+}
+
+.ms_auth_page_wrapper .ms_form_input.is-valid {
+    border-color: #51cf66;
+    background: rgba(81, 207, 102, 0.05);
+}
+
+.ms_auth_page_wrapper .ms_form_row {
+    display: flex;
+    gap: 15px;
+}
+
+.ms_auth_page_wrapper .ms_form_group.ms_half {
+    flex: 1;
+}
+
+.ms_auth_page_wrapper .ms_password_wrapper {
+    position: relative;
+}
+
+.ms_auth_page_wrapper .ms_password_wrapper .ms_form_input {
+    padding-right: 50px;
+}
+
+.ms_auth_page_wrapper .ms_toggle_password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.ms_auth_page_wrapper .ms_toggle_password:hover {
+    color: #ff4865;
+}
+
+.ms_auth_page_wrapper .ms_form_options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ms_auth_page_wrapper .ms_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.ms_auth_page_wrapper .ms_checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ff4865;
+    cursor: pointer;
+}
+
+.ms_auth_page_wrapper .ms_checkbox a {
+    color: #ff4865;
+    text-decoration: none;
+}
+
+.ms_auth_page_wrapper .ms_checkbox a:hover {
+    text-decoration: underline;
+}
+
+.ms_auth_page_wrapper .ms_forgot_link {
+    color: #ff4865;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.ms_auth_page_wrapper .ms_forgot_link:hover {
+    color: #fff;
+}
+
+.ms_auth_page_wrapper .ms_form_message {
+    margin-bottom: 20px;
+    display: none;
+}
+
+.ms_auth_page_wrapper .ms_auth_btn {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(135deg, #ff4865 0%, #e0405a 100%);
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.ms_auth_page_wrapper .ms_auth_btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 72, 101, 0.3);
+}
+
+.ms_auth_page_wrapper .ms_auth_btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ms_auth_page_wrapper .ms_auth_btn .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ms_auth_page_wrapper .ms_auth_btn .btn-loading i {
+    animation: spin 1s linear infinite;
+}
+
+.ms_auth_page_wrapper .ms_auth_divider {
+    position: relative;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.ms_auth_page_wrapper .ms_auth_divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ms_auth_page_wrapper .ms_auth_divider span {
+    background: #1a1a2e;
+    padding: 0 15px;
+    color: #666;
+    font-size: 13px;
+    position: relative;
+}
+
+.ms_auth_page_wrapper .ms_social_login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ms_auth_page_wrapper .ms_social_btn {
+    width: 100%;
+    height: 45px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.ms_auth_page_wrapper .ms_social_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ms_auth_page_wrapper .ms_google_btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.ms_auth_page_wrapper .ms_google_btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #db4437;
+}
+
+.ms_auth_page_wrapper .ms_google_btn i {
+    color: #db4437;
+}
+
+.ms_auth_page_wrapper .ms_facebook_btn {
+    background: rgba(59, 89, 152, 0.2);
+    color: #fff;
+}
+
+.ms_auth_page_wrapper .ms_facebook_btn:hover:not(:disabled) {
+    background: rgba(59, 89, 152, 0.4);
+    border-color: #3b5998;
+}
+
+.ms_auth_page_wrapper .ms_facebook_btn i {
+    color: #3b5998;
+}
+
+.ms_auth_page_wrapper .ms_auth_footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ms_auth_page_wrapper .ms_auth_footer p {
+    color: #888;
+    font-size: 14px;
+    margin: 0;
+}
+
+.ms_auth_page_wrapper .ms_auth_footer a {
+    color: #ff4865;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.ms_auth_page_wrapper .ms_auth_footer a:hover {
+    color: #fff;
+}
+
+/* Password Strength for page */
+.ms_auth_page_wrapper .ms_password_strength {
+    margin-top: 8px;
+}
+
+.ms_auth_page_wrapper .ms_password_strength .strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.ms_auth_page_wrapper .ms_password_strength .strength-fill {
+    display: block;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.weak .strength-fill {
+    background: #ff6b6b;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.medium .strength-fill {
+    background: #ffd43b;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.strong .strength-fill {
+    background: #51cf66;
+}
+
+.ms_auth_page_wrapper .ms_password_strength .strength-text {
+    font-size: 12px;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.weak .strength-text {
+    color: #ff6b6b;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.medium .strength-text {
+    color: #ffd43b;
+}
+
+.ms_auth_page_wrapper .ms_password_strength.strong .strength-text {
+    color: #51cf66;
+}
+
+/* Auth Page Responsive */
+@media (max-width: 576px) {
+    .ms_auth_page_wrapper {
+        padding: 30px 20px;
+        margin: 0 10px 30px;
+    }
+
+    .ms_auth_page_wrapper .ms_auth_header h1 {
+        font-size: 26px;
+    }
+
+    .ms_auth_page_wrapper .ms_form_row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .ms_auth_page_wrapper .ms_form_options {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+
+/* ========================================
+   Profile Page Styles
+   ======================================== */
+.ms_profile .ms_profile_wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px 50px;
+}
+
+.ms_profile .ms_profile_wrapper h1 {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    background: linear-gradient(135deg, #ff4865 0%, #e0405a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ms_profile .ms_profile_box {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(255, 72, 101, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+}
+
+.ms_profile .ms_pro_img {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255, 72, 101, 0.3);
+}
+
+.ms_profile .ms_pro_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ms_profile .ms_pro_img .pro_img_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.ms_profile .ms_pro_img:hover .pro_img_overlay {
+    opacity: 1;
+}
+
+.ms_profile .ms_pro_img .pro_img_overlay label {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms_profile .ms_pro_img .pro_img_overlay i {
+    font-size: 32px;
+    color: #ff4865;
+}
+
+.ms_profile .ms_pro_img input[type="file"] {
+    display: none;
+}
+
+.ms_profile .ms_pro_form {
+    flex: 1;
+}
+
+.ms_profile .ms_pro_form .form-group {
+    margin-bottom: 20px;
+}
+
+.ms_profile .ms_pro_form label {
+    display: block;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.ms_profile .ms_pro_form label .required {
+    color: #ff6b6b;
+}
+
+.ms_profile .ms_pro_form .form-control {
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0 20px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.ms_profile .ms_pro_form .form-control::placeholder {
+    color: #666;
+}
+
+.ms_profile .ms_pro_form .form-control:focus {
+    outline: none;
+    border-color: #ff4865;
+    background: rgba(255, 72, 101, 0.05);
+    box-shadow: 0 0 0 3px rgba(255, 72, 101, 0.1);
+}
+
+.ms_profile .ms_pro_form .form-control:disabled {
+    background: rgba(255, 255, 255, 0.02);
+    color: #666;
+    cursor: not-allowed;
+}
+
+.ms_profile .ms_pro_form .form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.ms_profile .ms_form_row {
+    display: flex;
+    gap: 15px;
+}
+
+.ms_profile .ms_form_row .ms_half {
+    flex: 1;
+}
+
+.ms_profile .ms_divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 30px 0;
+}
+
+.ms_profile .ms_pro_form h3 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.ms_profile .ms_pro_form .form-description {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.ms_profile .ms_password_wrapper {
+    position: relative;
+}
+
+.ms_profile .ms_password_wrapper .form-control {
+    padding-right: 50px;
+}
+
+.ms_profile .ms_toggle_password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.ms_profile .ms_toggle_password:hover {
+    color: #ff4865;
+}
+
+.ms_profile .ms_password_strength {
+    margin-top: 8px;
+}
+
+.ms_profile .ms_password_strength .strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.ms_profile .ms_password_strength .strength-fill {
+    display: block;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.ms_profile .ms_password_strength.weak .strength-fill {
+    background: #ff6b6b;
+}
+
+.ms_profile .ms_password_strength.medium .strength-fill {
+    background: #ffd43b;
+}
+
+.ms_profile .ms_password_strength.strong .strength-fill {
+    background: #51cf66;
+}
+
+.ms_profile .ms_password_strength .strength-text {
+    font-size: 12px;
+}
+
+.ms_profile .ms_password_strength.weak .strength-text {
+    color: #ff6b6b;
+}
+
+.ms_profile .ms_password_strength.medium .strength-text {
+    color: #ffd43b;
+}
+
+.ms_profile .ms_password_strength.strong .strength-text {
+    color: #51cf66;
+}
+
+.ms_profile .pro-form-btn {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.ms_profile .pro-form-btn .ms_btn {
+    min-width: 150px;
+    height: 50px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms_profile .pro-form-btn .ms_btn:first-child {
+    background-color: #ff4865;
+    border: none;
+    color: #fff;
+}
+
+.ms_profile .pro-form-btn .ms_btn:first-child:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 72, 101, 0.3);
+    background-color: #e0405a;
+}
+
+.ms_profile .pro-form-btn .ms_btn_secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.ms_profile .pro-form-btn .ms_btn_secondary:hover {
+    border-color: #ff4865;
+    background: rgba(255, 72, 101, 0.1);
+    color: #ff4865;
+}
+
+/* Profile Alerts */
+.ms_profile .ms_alert {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.ms_profile .ms_alert.alert-success {
+    background: rgba(81, 207, 102, 0.15);
+    border: 1px solid rgba(81, 207, 102, 0.3);
+    color: #51cf66;
+}
+
+.ms_profile .ms_alert.alert-error {
+    background: rgba(255, 107, 107, 0.15);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: #ff6b6b;
+}
+
+.ms_profile .ms_alert ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.ms_profile .ms_alert ul li {
+    margin-bottom: 5px;
+}
+
+.ms_profile .ms_alert ul li:last-child {
+    margin-bottom: 0;
+}
+
+/* Profile Page Responsive */
+@media (max-width: 768px) {
+    .ms_profile .ms_profile_box {
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px;
+    }
+
+    .ms_profile .ms_pro_img {
+        margin-bottom: 20px;
+    }
+
+    .ms_profile .ms_pro_form {
+        width: 100%;
+    }
+
+    .ms_profile .ms_form_row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .ms_profile .pro-form-btn {
+        flex-direction: column;
+    }
+
+    .ms_profile .pro-form-btn .ms_btn {
+        width: 100%;
+    }
+}
