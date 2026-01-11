@@ -250,8 +250,422 @@ function miraculous_music_customize_register($wp_customize) {
         'section' => 'miraculous_advertisement',
         'type'    => 'url',
     ));
+    // SEO Section
+    $wp_customize->add_section('miraculous_seo', array(
+        'title'    => __('SEO Settings', 'miraculous-music'),
+        'priority' => 25,
+        'description' => __('Cài đặt SEO cho website. Meta description và keywords sẽ được hiển thị trên trang chủ và các trang không có SEO riêng.', 'miraculous-music'),
+    ));
+
+    // Meta Description
+    $wp_customize->add_setting('seo_meta_description', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+    $wp_customize->add_control('seo_meta_description', array(
+        'label'       => __('Meta Description', 'miraculous-music'),
+        'description' => __('Mô tả ngắn gọn về website (150-160 ký tự)', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'textarea',
+    ));
+
+    // Meta Keywords
+    $wp_customize->add_setting('seo_meta_keywords', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_meta_keywords', array(
+        'label'       => __('Meta Keywords', 'miraculous-music'),
+        'description' => __('Từ khóa SEO, cách nhau bởi dấu phẩy', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'text',
+    ));
+
+    // OG Image
+    $wp_customize->add_setting('seo_og_image', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'seo_og_image', array(
+        'label'       => __('OG Image (Social Share)', 'miraculous-music'),
+        'description' => __('Hình ảnh hiển thị khi chia sẻ lên mạng xã hội (1200x630px)', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+    )));
+
+    // Google Site Verification
+    $wp_customize->add_setting('seo_google_verification', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_google_verification', array(
+        'label'       => __('Google Site Verification', 'miraculous-music'),
+        'description' => __('Mã xác minh Google Search Console', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'text',
+    ));
+
+    // Bing Site Verification
+    $wp_customize->add_setting('seo_bing_verification', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_bing_verification', array(
+        'label'       => __('Bing Site Verification', 'miraculous-music'),
+        'description' => __('Mã xác minh Bing Webmaster Tools', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'text',
+    ));
+
+    // Facebook App ID
+    $wp_customize->add_setting('seo_facebook_app_id', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_facebook_app_id', array(
+        'label'       => __('Facebook App ID', 'miraculous-music'),
+        'description' => __('ID ứng dụng Facebook (để tracking)', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'text',
+    ));
+
+    // Twitter Handle
+    $wp_customize->add_setting('seo_twitter_handle', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_twitter_handle', array(
+        'label'       => __('Twitter Handle', 'miraculous-music'),
+        'description' => __('Tên tài khoản Twitter (VD: @username)', 'miraculous-music'),
+        'section'     => 'miraculous_seo',
+        'type'        => 'text',
+    ));
+
+    // Robots Meta
+    $wp_customize->add_setting('seo_robots_index', array(
+        'default'           => 'index',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_robots_index', array(
+        'label'   => __('Robots Index', 'miraculous-music'),
+        'section' => 'miraculous_seo',
+        'type'    => 'select',
+        'choices' => array(
+            'index'   => __('Index (Cho phép index)', 'miraculous-music'),
+            'noindex' => __('NoIndex (Không cho index)', 'miraculous-music'),
+        ),
+    ));
+
+    $wp_customize->add_setting('seo_robots_follow', array(
+        'default'           => 'follow',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('seo_robots_follow', array(
+        'label'   => __('Robots Follow', 'miraculous-music'),
+        'section' => 'miraculous_seo',
+        'type'    => 'select',
+        'choices' => array(
+            'follow'   => __('Follow (Theo dõi links)', 'miraculous-music'),
+            'nofollow' => __('NoFollow (Không theo dõi links)', 'miraculous-music'),
+        ),
+    ));
+
+    // Analytics Section
+    $wp_customize->add_section('miraculous_analytics', array(
+        'title'    => __('Analytics & Tracking', 'miraculous-music'),
+        'priority' => 26,
+        'description' => __('Thêm mã tracking Google Analytics, Facebook Pixel, v.v.', 'miraculous-music'),
+    ));
+
+    // Google Analytics ID
+    $wp_customize->add_setting('analytics_google_id', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('analytics_google_id', array(
+        'label'       => __('Google Analytics ID', 'miraculous-music'),
+        'description' => __('VD: G-XXXXXXXXXX hoặc UA-XXXXXXXX-X', 'miraculous-music'),
+        'section'     => 'miraculous_analytics',
+        'type'        => 'text',
+    ));
+
+    // Google Tag Manager ID
+    $wp_customize->add_setting('analytics_gtm_id', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('analytics_gtm_id', array(
+        'label'       => __('Google Tag Manager ID', 'miraculous-music'),
+        'description' => __('VD: GTM-XXXXXXX', 'miraculous-music'),
+        'section'     => 'miraculous_analytics',
+        'type'        => 'text',
+    ));
+
+    // Facebook Pixel ID
+    $wp_customize->add_setting('analytics_fb_pixel', array(
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('analytics_fb_pixel', array(
+        'label'       => __('Facebook Pixel ID', 'miraculous-music'),
+        'description' => __('ID Facebook Pixel để tracking', 'miraculous-music'),
+        'section'     => 'miraculous_analytics',
+        'type'        => 'text',
+    ));
+
+    // Custom Head Scripts
+    $wp_customize->add_setting('analytics_head_scripts', array(
+        'default'           => '',
+        'sanitize_callback' => 'miraculous_sanitize_scripts',
+    ));
+    $wp_customize->add_control('analytics_head_scripts', array(
+        'label'       => __('Custom Scripts (Head)', 'miraculous-music'),
+        'description' => __('Thêm mã script vào thẻ &lt;head&gt;', 'miraculous-music'),
+        'section'     => 'miraculous_analytics',
+        'type'        => 'textarea',
+    ));
+
+    // Custom Footer Scripts
+    $wp_customize->add_setting('analytics_footer_scripts', array(
+        'default'           => '',
+        'sanitize_callback' => 'miraculous_sanitize_scripts',
+    ));
+    $wp_customize->add_control('analytics_footer_scripts', array(
+        'label'       => __('Custom Scripts (Footer)', 'miraculous-music'),
+        'description' => __('Thêm mã script trước thẻ &lt;/body&gt;', 'miraculous-music'),
+        'section'     => 'miraculous_analytics',
+        'type'        => 'textarea',
+    ));
 }
 add_action('customize_register', 'miraculous_music_customize_register');
+
+/**
+ * Sanitize scripts - allow script tags
+ */
+function miraculous_sanitize_scripts($input) {
+    return $input; // Allow scripts (only admins can access customizer)
+}
+
+/**
+ * Output SEO Meta Tags
+ * Only output if Yoast SEO or other SEO plugins are not active
+ */
+function miraculous_music_seo_meta_tags() {
+    // Skip if Yoast SEO or other popular SEO plugins are active
+    if (defined('WPSEO_VERSION') || class_exists('RankMath') || class_exists('JENGA_SEO')) {
+        return;
+    }
+
+    $meta_description = get_theme_mod('seo_meta_description', '');
+    $meta_keywords = get_theme_mod('seo_meta_keywords', '');
+    $og_image = get_theme_mod('seo_og_image', '');
+    $google_verification = get_theme_mod('seo_google_verification', '');
+    $bing_verification = get_theme_mod('seo_bing_verification', '');
+    $fb_app_id = get_theme_mod('seo_facebook_app_id', '');
+    $twitter_handle = get_theme_mod('seo_twitter_handle', '');
+    $robots_index = get_theme_mod('seo_robots_index', 'index');
+    $robots_follow = get_theme_mod('seo_robots_follow', 'follow');
+
+    // Default description from site tagline if not set
+    if (empty($meta_description)) {
+        $meta_description = get_bloginfo('description');
+    }
+
+    // For single posts/pages, use excerpt if available
+    if (is_singular() && has_excerpt()) {
+        $meta_description = wp_strip_all_tags(get_the_excerpt());
+    }
+
+    // Robots meta
+    echo '<meta name="robots" content="' . esc_attr($robots_index) . ', ' . esc_attr($robots_follow) . '">' . "\n";
+
+    // Canonical URL
+    if (is_singular()) {
+        echo '<link rel="canonical" href="' . esc_url(get_permalink()) . '">' . "\n";
+    } elseif (is_home() || is_front_page()) {
+        echo '<link rel="canonical" href="' . esc_url(home_url('/')) . '">' . "\n";
+    }
+
+    // Output meta description
+    if (!empty($meta_description)) {
+        echo '<meta name="description" content="' . esc_attr($meta_description) . '">' . "\n";
+    }
+
+    // Output meta keywords
+    if (!empty($meta_keywords)) {
+        echo '<meta name="keywords" content="' . esc_attr($meta_keywords) . '">' . "\n";
+    }
+
+    // Output Google verification
+    if (!empty($google_verification)) {
+        echo '<meta name="google-site-verification" content="' . esc_attr($google_verification) . '">' . "\n";
+    }
+
+    // Output Bing verification
+    if (!empty($bing_verification)) {
+        echo '<meta name="msvalidate.01" content="' . esc_attr($bing_verification) . '">' . "\n";
+    }
+
+    // Open Graph tags
+    echo '<meta property="og:locale" content="' . esc_attr(get_locale()) . '">' . "\n";
+    echo '<meta property="og:type" content="' . (is_singular() ? 'article' : 'website') . '">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+
+    if (!empty($fb_app_id)) {
+        echo '<meta property="fb:app_id" content="' . esc_attr($fb_app_id) . '">' . "\n";
+    }
+
+    if (is_singular()) {
+        echo '<meta property="og:title" content="' . esc_attr(get_the_title()) . '">' . "\n";
+        echo '<meta property="og:url" content="' . esc_url(get_permalink()) . '">' . "\n";
+
+        if (has_post_thumbnail()) {
+            $thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
+            if ($thumbnail) {
+                echo '<meta property="og:image" content="' . esc_url($thumbnail[0]) . '">' . "\n";
+                echo '<meta property="og:image:width" content="' . esc_attr($thumbnail[1]) . '">' . "\n";
+                echo '<meta property="og:image:height" content="' . esc_attr($thumbnail[2]) . '">' . "\n";
+            }
+        } elseif (!empty($og_image)) {
+            echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
+        }
+    } else {
+        echo '<meta property="og:title" content="' . esc_attr(get_bloginfo('name')) . '">' . "\n";
+        echo '<meta property="og:url" content="' . esc_url(home_url('/')) . '">' . "\n";
+
+        if (!empty($og_image)) {
+            echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
+        }
+    }
+
+    if (!empty($meta_description)) {
+        echo '<meta property="og:description" content="' . esc_attr($meta_description) . '">' . "\n";
+    }
+
+    // Twitter Card
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr(is_singular() ? get_the_title() : get_bloginfo('name')) . '">' . "\n";
+
+    if (!empty($twitter_handle)) {
+        echo '<meta name="twitter:site" content="' . esc_attr($twitter_handle) . '">' . "\n";
+        echo '<meta name="twitter:creator" content="' . esc_attr($twitter_handle) . '">' . "\n";
+    }
+
+    if (!empty($meta_description)) {
+        echo '<meta name="twitter:description" content="' . esc_attr($meta_description) . '">' . "\n";
+    }
+}
+add_action('wp_head', 'miraculous_music_seo_meta_tags', 1);
+
+/**
+ * Output Analytics Scripts in Head
+ */
+function miraculous_music_analytics_head() {
+    // Skip if in admin or customizer preview
+    if (is_admin() || is_customize_preview()) {
+        return;
+    }
+
+    $ga_id = get_theme_mod('analytics_google_id', '');
+    $gtm_id = get_theme_mod('analytics_gtm_id', '');
+    $fb_pixel = get_theme_mod('analytics_fb_pixel', '');
+    $head_scripts = get_theme_mod('analytics_head_scripts', '');
+
+    // Google Tag Manager (head)
+    if (!empty($gtm_id)) {
+        echo "<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','" . esc_js($gtm_id) . "');</script>
+<!-- End Google Tag Manager -->\n";
+    }
+
+    // Google Analytics 4
+    if (!empty($ga_id) && strpos($ga_id, 'G-') === 0) {
+        echo "<!-- Google Analytics 4 -->
+<script async src=\"https://www.googletagmanager.com/gtag/js?id=" . esc_attr($ga_id) . "\"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '" . esc_js($ga_id) . "');
+</script>
+<!-- End Google Analytics 4 -->\n";
+    }
+    // Universal Analytics (deprecated but still supported)
+    elseif (!empty($ga_id) && strpos($ga_id, 'UA-') === 0) {
+        echo "<!-- Universal Analytics -->
+<script async src=\"https://www.google-analytics.com/analytics.js\"></script>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '" . esc_js($ga_id) . "', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Universal Analytics -->\n";
+    }
+
+    // Facebook Pixel
+    if (!empty($fb_pixel)) {
+        echo "<!-- Facebook Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '" . esc_js($fb_pixel) . "');
+fbq('track', 'PageView');
+</script>
+<noscript><img height=\"1\" width=\"1\" style=\"display:none\"
+src=\"https://www.facebook.com/tr?id=" . esc_attr($fb_pixel) . "&ev=PageView&noscript=1\"/></noscript>
+<!-- End Facebook Pixel -->\n";
+    }
+
+    // Custom head scripts
+    if (!empty($head_scripts)) {
+        echo $head_scripts . "\n";
+    }
+}
+add_action('wp_head', 'miraculous_music_analytics_head', 2);
+
+/**
+ * Output Google Tag Manager noscript in body
+ */
+function miraculous_music_gtm_body() {
+    if (is_admin() || is_customize_preview()) {
+        return;
+    }
+
+    $gtm_id = get_theme_mod('analytics_gtm_id', '');
+
+    if (!empty($gtm_id)) {
+        echo '<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=' . esc_attr($gtm_id) . '"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->' . "\n";
+    }
+}
+add_action('wp_body_open', 'miraculous_music_gtm_body', 1);
+
+/**
+ * Output Custom Footer Scripts
+ */
+function miraculous_music_footer_scripts() {
+    if (is_admin() || is_customize_preview()) {
+        return;
+    }
+
+    $footer_scripts = get_theme_mod('analytics_footer_scripts', '');
+
+    if (!empty($footer_scripts)) {
+        echo $footer_scripts . "\n";
+    }
+}
+add_action('wp_footer', 'miraculous_music_footer_scripts', 999);
 
 /**
  * Register Custom Post Types
