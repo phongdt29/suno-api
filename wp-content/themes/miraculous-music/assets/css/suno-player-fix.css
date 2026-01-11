@@ -335,3 +335,68 @@
         font-size: 13px;
     }
 }
+
+/* ========================================
+   Image Quality Fix - Prevent Blurry Images
+   ======================================== */
+
+/* Prevent image rendering blur */
+img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Music thumbnails - sharp rendering */
+.ms_rcnt_box_img img,
+.w_tp_song_img img,
+.ms_genres_box img,
+.ms_release_box img,
+.ms_weekly_box img,
+.album_list_wrapper img,
+.album_single_data img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* Ensure images don't get blurry on transform/scale */
+.ms_rcnt_box:hover img,
+.ms_genres_box:hover img,
+.ms_release_box:hover img {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0) scale(1);
+    -webkit-transform: translateZ(0) scale(1);
+}
+
+/* Fix blurry images in swiper slider */
+.swiper-slide img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Banner image sharp */
+.ms_banner_img img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Profile image sharp */
+.ms_profile_img img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Prevent subpixel rendering issues */
+.ms_rcnt_box_img,
+.w_tp_song_img,
+.ms_genres_box,
+.ms_release_box {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}

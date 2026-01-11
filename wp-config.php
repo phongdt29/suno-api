@@ -95,7 +95,7 @@ define('WPLANG', 'vi');
 
 // Suno API Development Mode
 // Set to true to use mock data instead of real API calls (no credits required)
-define('SUNO_DEV_MODE', false);
+define('SUNO_DEV_MODE', true);
 
 // Suno API Key (optional in dev mode)
 define('SUNO_API_KEY', 'dev-key-no-credits-required');
