@@ -96,6 +96,17 @@ class Suno_Admin {
             'sanitize_callback' => 'sanitize_text_field',
         ));
 
+        register_setting('suno_settings', 'ai_provider', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => 'gemini',
+        ));
+
+        register_setting('suno_settings', 'gemini_api_key', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
         register_setting('suno_settings', 'openai_api_key', array(
             'type' => 'string',
             'sanitize_callback' => 'sanitize_text_field',
@@ -129,8 +140,24 @@ class Suno_Admin {
         );
 
         add_settings_field(
+            'ai_provider',
+            __('AI Provider (Auto Generate)', 'suno-music-generator'),
+            array($this, 'ai_provider_field_callback'),
+            'suno_settings',
+            'suno_api_section'
+        );
+
+        add_settings_field(
+            'gemini_api_key',
+            __('Google Gemini API Key', 'suno-music-generator'),
+            array($this, 'gemini_key_field_callback'),
+            'suno_settings',
+            'suno_api_section'
+        );
+
+        add_settings_field(
             'openai_api_key',
-            __('OpenAI API Key (Tùy chọn)', 'suno-music-generator'),
+            __('OpenAI API Key', 'suno-music-generator'),
             array($this, 'openai_key_field_callback'),
             'suno_settings',
             'suno_api_section'
@@ -197,10 +224,56 @@ class Suno_Admin {
     }
 
     /**
+     * AI Provider field callback
+     */
+    public function ai_provider_field_callback() {
+        $value = get_option('ai_provider', 'gemini');
+        ?>
+        <select id="ai_provider" name="ai_provider">
+            <option value="gemini" <?php selected($value, 'gemini'); ?>>
+                Google Gemini (Miễn phí)
+            </option>
+            <option value="openai" <?php selected($value, 'openai'); ?>>
+                OpenAI ChatGPT (Trả phí)
+            </option>
+        </select>
+        <p class="description">
+            <?php _e('Chọn AI provider cho tính năng Auto Generate (tạo lyrics tự động).', 'suno-music-generator'); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Gemini key field callback
+     */
+    public function gemini_key_field_callback() {
+        $value = get_option('gemini_api_key', '');
+        $provider = get_option('ai_provider', 'gemini');
+        ?>
+        <input type="password"
+               id="gemini_api_key"
+               name="gemini_api_key"
+               value="<?php echo esc_attr($value); ?>"
+               class="regular-text"
+               autocomplete="off">
+        <button type="button" class="button" onclick="togglePasswordVisibility('gemini_api_key')">
+            <?php _e('Hiện/Ẩn', 'suno-music-generator'); ?>
+        </button>
+        <?php if ($provider === 'gemini') : ?>
+            <span class="dashicons dashicons-yes-alt" style="color: green; margin-left: 5px;" title="Đang sử dụng"></span>
+        <?php endif; ?>
+        <p class="description">
+            <?php _e('<strong>MIỄN PHÍ!</strong> Lấy API key tại: <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>', 'suno-music-generator'); ?>
+        </p>
+        <?php
+    }
+
+    /**
      * OpenAI key field callback
      */
     public function openai_key_field_callback() {
         $value = get_option('openai_api_key', '');
+        $provider = get_option('ai_provider', 'gemini');
         ?>
         <input type="password"
                id="openai_api_key"
@@ -211,8 +284,11 @@ class Suno_Admin {
         <button type="button" class="button" onclick="togglePasswordVisibility('openai_api_key')">
             <?php _e('Hiện/Ẩn', 'suno-music-generator'); ?>
         </button>
+        <?php if ($provider === 'openai') : ?>
+            <span class="dashicons dashicons-yes-alt" style="color: green; margin-left: 5px;" title="Đang sử dụng"></span>
+        <?php endif; ?>
         <p class="description">
-            <?php _e('Dùng cho tính năng Auto Generate với ChatGPT. Lấy tại: <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>', 'suno-music-generator'); ?>
+            <?php _e('Trả phí. Lấy tại: <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>', 'suno-music-generator'); ?>
         </p>
         <?php
     }
@@ -531,7 +607,7 @@ class Suno_Admin {
                 <p><?php _e('Form tạo nhạc với lyrics tùy chỉnh. Cho phép người dùng nhập lyrics, tiêu đề, và style.', 'suno-music-generator'); ?></p>
 
                 <h3><code>[suno_auto_generator]</code></h3>
-                <p><?php _e('Form tạo nhạc tự động với ChatGPT (yêu cầu OpenAI API key). ChatGPT sẽ tự động tạo lyrics từ ý tưởng của bạn.', 'suno-music-generator'); ?></p>
+                <p><?php _e('Form tạo nhạc tự động với AI (Google Gemini miễn phí hoặc OpenAI). AI sẽ tự động tạo lyrics từ ý tưởng của bạn.', 'suno-music-generator'); ?></p>
 
                 <h3><code>[suno_lyrics_generator]</code></h3>
                 <p><?php _e('Form tạo lyrics AI. Chỉ tạo lyrics, không tạo nhạc.', 'suno-music-generator'); ?></p>

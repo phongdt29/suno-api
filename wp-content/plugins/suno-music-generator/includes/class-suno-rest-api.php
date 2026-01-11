@@ -382,12 +382,22 @@ class Suno_Rest_API {
     }
 
     /**
-     * Auto generate with ChatGPT
+     * Auto generate with AI (OpenAI or Gemini)
      */
     public static function auto_generate($request) {
+        $ai_provider = get_option('ai_provider', 'gemini'); // Default to Gemini (free)
+        $gemini_key = get_option('gemini_api_key', '');
         $openai_key = get_option('openai_api_key', '');
 
-        if (empty($openai_key)) {
+        // Check API key based on provider
+        if ($ai_provider === 'gemini' && empty($gemini_key)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'message' => __('Google Gemini API key chưa được cấu hình', 'suno-music-generator'),
+            ), 400);
+        }
+
+        if ($ai_provider === 'openai' && empty($openai_key)) {
             return new WP_REST_Response(array(
                 'success' => false,
                 'message' => __('OpenAI API key chưa được cấu hình', 'suno-music-generator'),
@@ -397,8 +407,14 @@ class Suno_Rest_API {
         $idea = $request->get_param('idea');
         $language = $request->get_param('language');
 
-        // Generate song content with ChatGPT
-        $gpt_result = self::call_chatgpt($idea, $language, $openai_key);
+        // Generate song content with AI
+        if ($ai_provider === 'gemini') {
+            $ai_result = self::call_gemini($idea, $language, $gemini_key);
+        } else {
+            $ai_result = self::call_chatgpt($idea, $language, $openai_key);
+        }
+
+        $gpt_result = $ai_result; // Keep variable name for compatibility
 
         if (!$gpt_result['success']) {
             return new WP_REST_Response($gpt_result, 400);
@@ -525,6 +541,116 @@ Trả về JSON với format:
             return array(
                 'success' => false,
                 'message' => __('Dữ liệu từ ChatGPT không hợp lệ', 'suno-music-generator'),
+            );
+        }
+
+        return array(
+            'success' => true,
+            'data' => array(
+                'title' => $song_data['title'] ?? '',
+                'style' => $song_data['style'] ?? '',
+                'lyrics' => $song_data['lyrics'],
+            ),
+        );
+    }
+
+    /**
+     * Call Google Gemini API (Free)
+     */
+    private static function call_gemini($idea, $language, $api_key) {
+        $language_map = array(
+            'vietnamese' => 'tiếng Việt',
+            'english' => 'English',
+            'korean' => '한국어',
+            'japanese' => '日本語',
+        );
+
+        $lang_name = $language_map[$language] ?? 'English';
+
+        $prompt = "Bạn là một nhạc sĩ chuyên nghiệp. Dựa trên ý tưởng sau, hãy tạo ra:
+1. Tiêu đề bài hát (title)
+2. Phong cách âm nhạc (style) - ví dụ: Pop, Rock, Ballad, R&B, Hip-hop, Jazz...
+3. Lời bài hát (lyrics) với đầy đủ các phần: Verse, Chorus, Bridge...
+
+Ý tưởng: {$idea}
+
+Hãy viết lời bằng {$lang_name}.
+
+CHỈ trả về JSON với format sau, không có text nào khác:
+{
+    \"title\": \"Tiêu đề bài hát\",
+    \"style\": \"Phong cách âm nhạc\",
+    \"lyrics\": \"Lời bài hát đầy đủ với [Verse], [Chorus], [Bridge]...\"
+}";
+
+        $response = wp_remote_post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $api_key, array(
+            'timeout' => 60,
+            'headers' => array(
+                'Content-Type' => 'application/json',
+            ),
+            'body' => wp_json_encode(array(
+                'contents' => array(
+                    array(
+                        'parts' => array(
+                            array('text' => $prompt)
+                        )
+                    )
+                ),
+                'generationConfig' => array(
+                    'temperature' => 0.8,
+                    'maxOutputTokens' => 2000,
+                )
+            )),
+        ));
+
+        if (is_wp_error($response)) {
+            return array(
+                'success' => false,
+                'message' => 'Gemini Error: ' . $response->get_error_message(),
+            );
+        }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+        $http_code = wp_remote_retrieve_response_code($response);
+
+        // Log for debugging
+        error_log('Gemini Response Code: ' . $http_code);
+        error_log('Gemini Response Body: ' . $body);
+
+        // Check for API errors
+        if (isset($data['error'])) {
+            return array(
+                'success' => false,
+                'message' => 'Gemini Error: ' . ($data['error']['message'] ?? 'Unknown error'),
+            );
+        }
+
+        // Extract content from Gemini response
+        if (!isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+            return array(
+                'success' => false,
+                'message' => __('Không thể tạo nội dung từ Gemini', 'suno-music-generator') . ' - HTTP: ' . $http_code,
+            );
+        }
+
+        $content = $data['candidates'][0]['content']['parts'][0]['text'];
+
+        // Parse JSON from response
+        preg_match('/\{[\s\S]*\}/', $content, $matches);
+        if (empty($matches)) {
+            return array(
+                'success' => false,
+                'message' => __('Không thể parse kết quả từ Gemini', 'suno-music-generator'),
+            );
+        }
+
+        $song_data = json_decode($matches[0], true);
+
+        if (!$song_data || !isset($song_data['lyrics'])) {
+            return array(
+                'success' => false,
+                'message' => __('Dữ liệu từ Gemini không hợp lệ', 'suno-music-generator'),
             );
         }
 
