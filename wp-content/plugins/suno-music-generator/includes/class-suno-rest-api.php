@@ -487,11 +487,24 @@ Trả về JSON với format:
 
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
+        $http_code = wp_remote_retrieve_response_code($response);
+
+        // Log for debugging
+        error_log('OpenAI Response Code: ' . $http_code);
+        error_log('OpenAI Response Body: ' . $body);
 
         if (!isset($data['choices'][0]['message']['content'])) {
+            $error_msg = __('Không thể tạo nội dung từ ChatGPT', 'suno-music-generator');
+
+            if (isset($data['error']['message'])) {
+                $error_msg = 'OpenAI Error: ' . $data['error']['message'];
+            } elseif ($http_code !== 200) {
+                $error_msg = 'OpenAI HTTP Error: ' . $http_code . ' - ' . $body;
+            }
+
             return array(
                 'success' => false,
-                'message' => isset(['error']['message']) ? 'OpenAI Error: ' . ['error']['message'] : __('Không thể tạo nội dung từ ChatGPT', 'suno-music-generator'),
+                'message' => $error_msg,
             );
         }
 
