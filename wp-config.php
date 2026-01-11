@@ -92,8 +92,6 @@ define( 'WP_DEBUG', true );
 // Set WordPress language to Vietnamese
 define('WPLANG', 'vi');
 
-// Or use this for full locale
-define('WPLANG', 'vi_VN');
 
 // Suno API Development Mode
 // Set to true to use mock data instead of real API calls (no credits required)

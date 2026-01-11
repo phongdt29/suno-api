@@ -61,6 +61,8 @@ function miraculous_music_scripts() {
     wp_enqueue_style('miraculous-style', get_template_directory_uri() . '/assets/css/style.css', array(), $theme_version);
     wp_enqueue_style('suno-player-fix', get_template_directory_uri() . '/assets/css/suno-player-fix.css', array('miraculous-style'), $theme_version);
     wp_enqueue_style('auth-modal', get_template_directory_uri() . '/assets/css/auth-modal.css', array('miraculous-style'), $theme_version);
+    wp_enqueue_style('profile-fix', get_template_directory_uri() . '/assets/css/profile-fix.css', array('miraculous-style'), $theme_version);
+    wp_enqueue_style('policy-pages', get_template_directory_uri() . '/assets/css/policy-pages.css', array('miraculous-style'), $theme_version);
 
     // Scripts
     wp_enqueue_script('jquery');

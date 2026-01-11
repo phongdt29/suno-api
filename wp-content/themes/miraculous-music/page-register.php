@@ -76,9 +76,9 @@ get_header();
                                 <span class="checkmark"></span>
                                 <?php printf(
                                     esc_html__('Tôi đồng ý với %sĐiều khoản sử dụng%s và %sChính sách bảo mật%s', 'miraculous-music'),
-                                    '<a href="' . esc_url(get_privacy_policy_url()) . '" target="_blank">',
+                                    '<a href="' . esc_url(home_url('/dieu-khoan-su-dung')) . '" target="_blank">',
                                     '</a>',
-                                    '<a href="' . esc_url(get_privacy_policy_url()) . '" target="_blank">',
+                                    '<a href="' . esc_url(home_url('/chinh-sach-bao-mat')) . '" target="_blank">',
                                     '</a>'
                                 ); ?>
                             </label>

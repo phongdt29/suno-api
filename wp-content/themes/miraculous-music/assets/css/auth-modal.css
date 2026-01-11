@@ -931,7 +931,7 @@ body.modal-open {
    Profile Page Styles
    ======================================== */
 .ms_profile .ms_profile_wrapper {
-    max-width: 800px;
+    /* max-width: 800px; */
     margin: 0 auto;
     padding: 0 20px 50px;
 }

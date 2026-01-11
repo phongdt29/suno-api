@@ -158,36 +158,35 @@ get_header();
                 <form method="post" id="profile-form">
                     <?php wp_nonce_field('update_profile', 'profile_nonce'); ?>
 
-                    <div class="ms_form_row">
-                        <div class="form-group ms_half">
-                            <label><?php esc_html_e('Họ', 'miraculous-music'); ?></label>
-                            <input type="text" name="first_name" class="form-control"
-                                   value="<?php echo esc_attr($current_user->first_name); ?>"
-                                   placeholder="<?php esc_attr_e('Nhập họ', 'miraculous-music'); ?>">
-                        </div>
-                        <div class="form-group ms_half">
-                            <label><?php esc_html_e('Tên', 'miraculous-music'); ?></label>
-                            <input type="text" name="last_name" class="form-control"
-                                   value="<?php echo esc_attr($current_user->last_name); ?>"
-                                   placeholder="<?php esc_attr_e('Nhập tên', 'miraculous-music'); ?>">
-                        </div>
+                    <div class="form-group ms_full">
+                        <label><?php esc_html_e('Họ', 'miraculous-music'); ?></label>
+                        <input type="text" name="first_name" class="form-control"
+                               value="<?php echo esc_attr($current_user->first_name); ?>"
+                               placeholder="<?php esc_attr_e('Nhập họ', 'miraculous-music'); ?>">
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
+                        <label><?php esc_html_e('Tên', 'miraculous-music'); ?></label>
+                        <input type="text" name="last_name" class="form-control"
+                               value="<?php echo esc_attr($current_user->last_name); ?>"
+                               placeholder="<?php esc_attr_e('Nhập tên', 'miraculous-music'); ?>">
+                    </div>
+
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Tên hiển thị', 'miraculous-music'); ?> <span class="required">*</span></label>
                         <input type="text" name="display_name" class="form-control"
                                value="<?php echo esc_attr($current_user->display_name); ?>"
                                placeholder="<?php esc_attr_e('Tên hiển thị công khai', 'miraculous-music'); ?>" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Email', 'miraculous-music'); ?> <span class="required">*</span></label>
                         <input type="email" name="email" class="form-control"
                                value="<?php echo esc_attr($current_user->user_email); ?>"
                                placeholder="<?php esc_attr_e('Địa chỉ email', 'miraculous-music'); ?>" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Tên đăng nhập', 'miraculous-music'); ?></label>
                         <input type="text" class="form-control" value="<?php echo esc_attr($current_user->user_login); ?>" disabled>
                         <small class="form-text"><?php esc_html_e('Tên đăng nhập không thể thay đổi.', 'miraculous-music'); ?></small>
@@ -198,7 +197,7 @@ get_header();
                     <h3><?php esc_html_e('Đổi mật khẩu', 'miraculous-music'); ?></h3>
                     <p class="form-description"><?php esc_html_e('Để trống nếu không muốn đổi mật khẩu.', 'miraculous-music'); ?></p>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Mật khẩu hiện tại', 'miraculous-music'); ?></label>
                         <div class="ms_password_wrapper">
                             <input type="password" name="current_password" id="current_password" class="form-control"
@@ -209,7 +208,7 @@ get_header();
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Mật khẩu mới', 'miraculous-music'); ?></label>
                         <div class="ms_password_wrapper">
                             <input type="password" name="new_password" id="new_password" class="form-control"
@@ -221,7 +220,7 @@ get_header();
                         <div class="ms_password_strength" id="password-strength"></div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group ms_full">
                         <label><?php esc_html_e('Xác nhận mật khẩu mới', 'miraculous-music'); ?></label>
                         <div class="ms_password_wrapper">
                             <input type="password" name="confirm_password" id="confirm_password" class="form-control"
@@ -232,9 +231,9 @@ get_header();
                         </div>
                     </div>
 
-                    <div class="pro-form-btn text-center marger_top15">
-                        <button type="submit" class="ms_btn"><?php esc_html_e('Lưu thay đổi', 'miraculous-music'); ?></button>
-                        <a href="<?php echo esc_url(home_url('/')); ?>" class="ms_btn ms_btn_secondary"><?php esc_html_e('Hủy', 'miraculous-music'); ?></a>
+                    <div class="pro-form-btn form-group ms_full text-center marger_top15">
+                        <button type="submit" class="ms_btn" style="min-width: 200px;"><?php esc_html_e('Lưu thay đổi', 'miraculous-music'); ?></button>
+                        <a href="<?php echo esc_url(home_url('/')); ?>" class="ms_btn ms_btn_secondary" style="min-width: 200px;"><?php esc_html_e('Hủy', 'miraculous-music'); ?></a>
                     </div>
                 </form>
             </div>
@@ -244,6 +243,21 @@ get_header();
 
 <script>
 jQuery(document).ready(function($) {
+    // Toggle password visibility
+    $('.ms_toggle_password').on('click', function() {
+        var targetId = $(this).data('target');
+        var input = $('#' + targetId);
+        var icon = $(this).find('i');
+
+        if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
     // Password strength for new password field
     $('#new_password').on('input', function() {
         var password = $(this).val();

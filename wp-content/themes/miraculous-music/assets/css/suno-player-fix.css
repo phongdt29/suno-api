@@ -259,3 +259,79 @@
 .ms_live_search_dropdown::-webkit-scrollbar-thumb:hover {
     background: #14a3c7;
 }
+
+/* ========================================
+   Load More Button Styles
+   ======================================== */
+.load-more-wrapper {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+#load-more-music {
+    height: 45px;
+    line-height: 45px;
+    width: auto;
+    min-width: 180px;
+    padding: 0 30px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 0;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff4865 0%, #ff6b8a 100%);
+    box-shadow: 0 4px 15px rgba(255, 72, 101, 0.3);
+    transition: all 0.3s ease;
+}
+
+#load-more-music:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 72, 101, 0.5);
+}
+
+#load-more-music:active {
+    transform: translateY(0);
+}
+
+#load-more-music:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#load-more-music .fa-spinner {
+    margin-right: 8px;
+}
+
+/* ms_weekly_wrapper load more spacing */
+.ms_weekly_wrapper .load-more-wrapper {
+    margin-top: 40px;
+    padding-bottom: 30px;
+}
+
+/* Responsive styles for load more button */
+@media (max-width: 767px) {
+    #load-more-music {
+        height: 40px;
+        line-height: 40px;
+        min-width: 150px;
+        padding: 0 20px;
+        font-size: 14px;
+    }
+
+    .load-more-wrapper {
+        padding: 15px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    #load-more-music {
+        height: 38px;
+        line-height: 38px;
+        min-width: 130px;
+        padding: 0 15px;
+        font-size: 13px;
+    }
+}

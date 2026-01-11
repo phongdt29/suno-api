@@ -1,0 +1,458 @@
+/**
+ * Profile Page CSS Fix
+ * Fix layout cho page-profile.php
+ */
+
+/* Profile Wrapper */
+.ms_profile_wrapper {
+    text-align: center;
+    margin-top: 60px;
+    padding-left: 80px;
+    padding-right: 20px;
+}
+
+.ms_profile_wrapper h1 {
+    font-size: 26px;
+    color: #fff;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+/* Profile Box - giống template gốc */
+.ms_profile_box {
+    background-color: #1b2039;
+    width: 61%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 50px 30px;
+    display: inline-block;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+/* Profile Image */
+.ms_pro_img {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.ms_pro_img img {
+    width: 155px;
+    height: 155px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+.avatar_form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 155px;
+    height: 155px;
+    border-radius: 100%;
+}
+
+.pro_img_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    border: 2px solid #fff;
+    opacity: 0;
+    transition: all .3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms_pro_img:hover .pro_img_overlay {
+    opacity: 1;
+}
+
+.pro_img_overlay label {
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.pro_img_overlay input[type="file"] {
+    display: none;
+}
+
+/* Profile Form */
+.ms_pro_form {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Form - tất cả field 2 cột */
+.ms_pro_form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 88%;
+    margin: 0 auto;
+}
+
+.ms_pro_form .form-group {
+    width: 50%;
+    margin-bottom: 25px;
+    text-align: left;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+/* Full width elements */
+.ms_pro_form hr.ms_divider,
+.ms_pro_form h3,
+.ms_pro_form .form-description,
+.ms_pro_form .pro-form-btn,
+.ms_pro_form .form-group.ms_full {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+/* Form Row - giữ lại cho backward compatibility */
+.ms_form_row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.ms_form_row .form-group.ms_half {
+    width: 50%;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.ms_pro_form .form-group label {
+    font-size: 16px;
+    color: #ff4865;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.ms_pro_form .form-group label .required {
+    color: #ff4865;
+}
+
+/* Form Control */
+.ms_pro_form .form-control {
+    width: 100%;
+    height: 45px;
+    background-color: #14182a;
+    border: 1px solid #252b4d;
+    color: #fff;
+    font-size: 14px;
+    padding: 0 15px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.ms_pro_form .form-control:focus {
+    outline: none;
+    border-color: #ff4865;
+    box-shadow: none;
+}
+
+.ms_pro_form .form-control::placeholder {
+    color: #8e8e93;
+}
+
+.ms_pro_form .form-control:disabled {
+    background-color: #0d101a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.ms_pro_form small.form-text {
+    color: #8e8e93;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Divider */
+hr.ms_divider {
+    border: none;
+    border-top: 1px solid #252b4d;
+    margin: 30px auto;
+    width: 88%;
+}
+
+/* Section Title */
+.ms_pro_form h3 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.ms_pro_form .form-description {
+    color: #8e8e93;
+    font-size: 14px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Password Wrapper */
+.ms_password_wrapper {
+    position: relative;
+}
+
+.ms_password_wrapper .form-control {
+    padding-right: 45px;
+}
+
+.ms_toggle_password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #8e8e93;
+    transition: color 0.3s;
+    z-index: 2;
+}
+
+.ms_toggle_password:hover {
+    color: #ff4865;
+}
+
+/* Password Strength */
+.ms_password_strength {
+    margin-top: 10px;
+}
+
+.strength-bar {
+    height: 4px;
+    background: #252b4d;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.strength-fill {
+    display: block;
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.ms_password_strength.weak .strength-fill {
+    background: #dc3545;
+}
+
+.ms_password_strength.medium .strength-fill {
+    background: #ffc107;
+}
+
+.ms_password_strength.strong .strength-fill {
+    background: #28a745;
+}
+
+.strength-text {
+    display: block;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.ms_password_strength.weak .strength-text {
+    color: #dc3545;
+}
+
+.ms_password_strength.medium .strength-text {
+    color: #ffc107;
+}
+
+.ms_password_strength.strong .strength-text {
+    color: #28a745;
+}
+
+/* Buttons */
+.pro-form-btn {
+    margin-top: 25px;
+    padding: 0 12px;
+}
+
+.pro-form-btn.text-center {
+    text-align: center;
+}
+
+.pro-form-btn .ms_btn {
+    height: 45px;
+    min-width: 140px;
+    line-height: 45px;
+    margin: 5px 8px;
+    display: inline-block;
+    text-align: center;
+    background: linear-gradient(to right, #ff4865, #ff7676);
+    color: #fff !important;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    padding: 0 25px;
+}
+
+.pro-form-btn .ms_btn:hover {
+    background: linear-gradient(to right, #ff7676, #ff4865);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 72, 101, 0.4);
+}
+
+.pro-form-btn .ms_btn.ms_btn_secondary {
+    background: transparent;
+    border: 2px solid #fff;
+    line-height: 41px;
+}
+
+.pro-form-btn .ms_btn.ms_btn_secondary:hover {
+    background: #fff;
+    color: #14182a !important;
+}
+
+/* Alert Messages */
+.ms_alert {
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 61%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.ms_alert ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style: disc;
+}
+
+.ms_alert li {
+    margin-bottom: 5px;
+    color: inherit;
+}
+
+.ms_alert li:last-child {
+    margin-bottom: 0;
+}
+
+.alert-error {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid #dc3545;
+    color: #ff6b7a;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.2);
+    border: 1px solid #28a745;
+    color: #5dd879;
+}
+
+/* Responsive */
+@media (max-width: 1600px) {
+    .ms_profile_box {
+        width: 70%;
+    }
+    .ms_alert {
+        width: 70%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .ms_profile_box {
+        width: 80%;
+    }
+    .ms_alert {
+        width: 80%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .ms_profile_box {
+        width: 90%;
+    }
+    .ms_alert {
+        width: 90%;
+    }
+    .ms_pro_form .form-group,
+    .ms_form_row {
+        width: 95%;
+    }
+    hr.ms_divider {
+        width: 95%;
+    }
+}
+
+@media (max-width: 991px) {
+    .ms_profile_wrapper {
+        padding-left: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .ms_profile_box {
+        width: 95%;
+        padding: 30px 15px;
+    }
+    .ms_alert {
+        width: 95%;
+    }
+    .ms_pro_form {
+        width: 100%;
+    }
+    .ms_pro_form .form-group {
+        width: 100%;
+        padding: 0;
+    }
+    .ms_form_row {
+        flex-direction: column;
+    }
+    .ms_form_row .form-group.ms_half {
+        width: 100%;
+    }
+    hr.ms_divider {
+        width: 100%;
+    }
+    .pro-form-btn .ms_btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .ms_profile_wrapper {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .ms_profile_wrapper h1 {
+        font-size: 22px;
+    }
+    .ms_pro_img img,
+    .avatar_form {
+        width: 120px;
+        height: 120px;
+    }
+    .ms_pro_form .form-group label {
+        font-size: 14px;
+    }
+}

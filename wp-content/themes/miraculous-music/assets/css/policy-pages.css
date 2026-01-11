@@ -1,0 +1,176 @@
+/**
+ * Policy Pages CSS
+ * Styles for Terms of Service and Privacy Policy pages
+ */
+
+/* Policy Wrapper */
+.ms_policy_wrapper {
+    text-align: center;
+    margin-top: 60px;
+    padding-left: 80px;
+    padding-right: 20px;
+}
+
+.ms_policy_wrapper h1 {
+    font-size: 32px;
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+/* Policy Box */
+.ms_policy_box {
+    background-color: #1b2039;
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+    padding: 40px 50px;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+.ms_policy_update {
+    color: #8e8e93;
+    font-size: 14px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #252b4d;
+}
+
+/* Policy Content */
+.ms_policy_content {
+    color: #c9c9c9;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* Section */
+.ms_policy_section {
+    margin-bottom: 35px;
+}
+
+.ms_policy_section:last-child {
+    margin-bottom: 0;
+}
+
+.ms_policy_section h2 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff4865;
+    display: inline-block;
+}
+
+.ms_policy_section h3 {
+    color: #ff4865;
+    font-size: 17px;
+    font-weight: 500;
+    margin: 20px 0 10px 0;
+}
+
+.ms_policy_section p {
+    margin-bottom: 15px;
+    color: #c9c9c9;
+}
+
+.ms_policy_section ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.ms_policy_section li {
+    margin-bottom: 10px;
+    color: #c9c9c9;
+    position: relative;
+}
+
+.ms_policy_section li::marker {
+    color: #ff4865;
+}
+
+.ms_policy_section strong {
+    color: #fff;
+}
+
+.ms_policy_section a {
+    color: #ff4865;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.ms_policy_section a:hover {
+    color: #ff7676;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .ms_policy_box {
+        width: 90%;
+    }
+}
+
+@media (max-width: 991px) {
+    .ms_policy_wrapper {
+        padding-left: 20px;
+    }
+    .ms_policy_box {
+        padding: 30px 35px;
+    }
+}
+
+@media (max-width: 767px) {
+    .ms_policy_wrapper h1 {
+        font-size: 26px;
+    }
+    .ms_policy_box {
+        width: 95%;
+        padding: 25px 20px;
+    }
+    .ms_policy_section h2 {
+        font-size: 19px;
+    }
+    .ms_policy_section h3 {
+        font-size: 16px;
+    }
+    .ms_policy_content {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ms_policy_wrapper {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .ms_policy_wrapper h1 {
+        font-size: 22px;
+    }
+    .ms_policy_box {
+        padding: 20px 15px;
+    }
+}
+
+/* Footer Policy Links */
+.ms_footer_links {
+    margin-top: 15px;
+}
+
+.ms_footer_links a {
+    color: #8e8e93;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.ms_footer_links a:hover {
+    color: #ff4865;
+}
+
+.ms_link_divider {
+    color: #555;
+    margin: 0 10px;
+}

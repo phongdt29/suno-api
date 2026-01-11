@@ -113,6 +113,11 @@
             <div class="ms_copyright">
                 <div class="footer_border"></div>
                 <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>. <?php esc_html_e('Bảo lưu mọi quyền.', 'miraculous-music'); ?></p>
+                <div class="ms_footer_links">
+                    <a href="<?php echo esc_url(home_url('/dieu-khoan-su-dung')); ?>"><?php esc_html_e('Điều khoản sử dụng', 'miraculous-music'); ?></a>
+                    <span class="ms_link_divider">|</span>
+                    <a href="<?php echo esc_url(home_url('/chinh-sach-bao-mat')); ?>"><?php esc_html_e('Chính sách bảo mật', 'miraculous-music'); ?></a>
+                </div>
             </div>
         </div>
 

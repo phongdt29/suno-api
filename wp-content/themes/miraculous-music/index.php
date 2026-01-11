@@ -417,7 +417,7 @@ get_header(); ?>
                     </div>
 
                     <?php if ($max_pages > 1) : ?>
-                        <div class="load-more-wrapper" style="text-align: center; margin-top: 30px;">
+                        <div class="load-more-wrapper">
                             <button type="button"
                                     id="load-more-music"
                                     class="ms_btn"
