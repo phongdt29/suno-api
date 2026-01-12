@@ -31,48 +31,191 @@ get_header(); ?>
                         </div>
 
                         <!-- Generate Music Section -->
-                        <div class="suno-generator-box" style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin-bottom: 30px;">
-                            <h2><?php esc_html_e('Generate New Music', 'miraculous-music'); ?></h2>
+                        <div class="suno-generator-box" style="background: #1d2025; padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+                            <h2 style="color: #fff; margin-bottom: 25px;"><?php esc_html_e('Generate New Music', 'miraculous-music'); ?></h2>
 
                             <form id="generate-music-form">
-                                <div class="form-group">
-                                    <label for="music-prompt"><?php esc_html_e('Music Description', 'miraculous-music'); ?></label>
-                                    <input type="text"
-                                           id="music-prompt"
-                                           name="prompt"
-                                           class="form-control"
-                                           placeholder="<?php esc_attr_e('e.g., A happy pop song about summer', 'miraculous-music'); ?>"
-                                           required>
-                                    <small class="form-text text-muted">
-                                        <?php esc_html_e('Describe the type of music you want to generate', 'miraculous-music'); ?>
-                                    </small>
-                                </div>
+                                <!-- Music Category/Genre Selection -->
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label for="music-genre" style="color: #fff; margin-bottom: 10px; display: block;">
+                                        <?php esc_html_e('Thể Loại Nhạc', 'miraculous-music'); ?> <span style="color: #14b8a6;">*</span>
+                                    </label>
+                                    <select id="music-genre" name="genre" class="form-control" style="background: #2a2e35; color: #fff; border: 1px solid #3d4148; padding: 12px; border-radius: 5px;" required>
+                                        <option value=""><?php esc_html_e('-- Chọn thể loại --', 'miraculous-music'); ?></option>
 
-                                <div class="form-group">
-                                    <label for="music-model"><?php esc_html_e('AI Model', 'miraculous-music'); ?></label>
-                                    <select id="music-model" name="model" class="form-control">
-                                        <option value="V4">V4</option>
-                                        <option value="V4.5">V4.5</option>
-                                        <option value="V4.5PLUS">V4.5 PLUS</option>
-                                        <option value="V4.5ALL">V4.5 ALL</option>
-                                        <option value="V5">V5 (Latest)</option>
+                                        <optgroup label="<?php esc_attr_e('Nhạc Việt Nam', 'miraculous-music'); ?>">
+                                            <option value="Nhạc Trẻ">Nhạc Trẻ</option>
+                                            <option value="Nhạc Bolero">Nhạc Bolero</option>
+                                            <option value="Nhạc Trữ Tình">Nhạc Trữ Tình</option>
+                                            <option value="Nhạc Tết">Nhạc Tết</option>
+                                            <option value="Nhạc Quê Hương">Nhạc Quê Hương</option>
+                                            <option value="Nhạc Cách Mạng">Nhạc Cách Mạng</option>
+                                            <option value="Nhạc Thiếu Nhi">Nhạc Thiếu Nhi</option>
+                                            <option value="Rap Việt">Rap Việt</option>
+                                            <option value="V-Pop">V-Pop</option>
+                                        </optgroup>
+
+                                        <optgroup label="<?php esc_attr_e('Nhạc Quốc Tế', 'miraculous-music'); ?>">
+                                            <option value="Pop">Pop</option>
+                                            <option value="Rock">Rock</option>
+                                            <option value="R&B">R&B / Soul</option>
+                                            <option value="Hip Hop">Hip Hop</option>
+                                            <option value="EDM">EDM / Electronic</option>
+                                            <option value="Jazz">Jazz</option>
+                                            <option value="Blues">Blues</option>
+                                            <option value="Country">Country</option>
+                                            <option value="Classical">Classical</option>
+                                            <option value="Reggae">Reggae</option>
+                                            <option value="Metal">Metal</option>
+                                            <option value="Indie">Indie</option>
+                                            <option value="K-Pop">K-Pop</option>
+                                            <option value="J-Pop">J-Pop</option>
+                                            <option value="Latin">Latin</option>
+                                        </optgroup>
+
+                                        <optgroup label="<?php esc_attr_e('Nhạc Theo Tâm Trạng', 'miraculous-music'); ?>">
+                                            <option value="Nhạc Buồn">Nhạc Buồn</option>
+                                            <option value="Nhạc Vui">Nhạc Vui / Sôi Động</option>
+                                            <option value="Nhạc Thư Giãn">Nhạc Thư Giãn / Chill</option>
+                                            <option value="Nhạc Lãng Mạn">Nhạc Lãng Mạn</option>
+                                            <option value="Nhạc Tình Yêu">Nhạc Tình Yêu</option>
+                                            <option value="Nhạc Chia Tay">Nhạc Chia Tay</option>
+                                        </optgroup>
+
+                                        <optgroup label="<?php esc_attr_e('Nhạc Theo Mục Đích', 'miraculous-music'); ?>">
+                                            <option value="Nhạc Tập Gym">Nhạc Tập Gym / Workout</option>
+                                            <option value="Nhạc Ngủ">Nhạc Ngủ / Sleep</option>
+                                            <option value="Nhạc Học Bài">Nhạc Học Bài / Study</option>
+                                            <option value="Nhạc Café">Nhạc Café</option>
+                                            <option value="Nhạc Thiền">Nhạc Thiền / Meditation</option>
+                                            <option value="Nhạc Tiệc">Nhạc Tiệc / Party</option>
+                                            <option value="Nhạc Đám Cưới">Nhạc Đám Cưới</option>
+                                        </optgroup>
+
+                                        <optgroup label="<?php esc_attr_e('Nhạc Không Lời', 'miraculous-music'); ?>">
+                                            <option value="Instrumental">Instrumental</option>
+                                            <option value="Piano">Piano</option>
+                                            <option value="Guitar Acoustic">Guitar Acoustic</option>
+                                            <option value="Lo-Fi">Lo-Fi</option>
+                                            <option value="Ambient">Ambient</option>
+                                            <option value="Orchestra">Orchestra</option>
+                                        </optgroup>
                                     </select>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="generated-task-id"><?php esc_html_e('Generated Task ID', 'miraculous-music'); ?></label>
+                                <!-- Sub-style/Mood Selection -->
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label for="music-mood" style="color: #fff; margin-bottom: 10px; display: block;">
+                                        <?php esc_html_e('Phong Cách / Mood', 'miraculous-music'); ?>
+                                    </label>
+                                    <div class="mood-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                        <?php
+                                        $moods = array(
+                                            'upbeat' => 'Sôi Động',
+                                            'slow' => 'Chậm Rãi',
+                                            'emotional' => 'Xúc Động',
+                                            'energetic' => 'Năng Lượng',
+                                            'calm' => 'Bình Yên',
+                                            'dark' => 'U Tối',
+                                            'bright' => 'Tươi Sáng',
+                                            'nostalgic' => 'Hoài Niệm',
+                                            'romantic' => 'Lãng Mạn',
+                                            'powerful' => 'Mạnh Mẽ',
+                                        );
+                                        foreach ($moods as $value => $label) :
+                                        ?>
+                                            <label class="mood-tag" style="display: inline-flex; align-items: center; background: #2a2e35; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: all 0.3s;">
+                                                <input type="checkbox" name="mood[]" value="<?php echo esc_attr($value); ?>" style="display: none;">
+                                                <span style="color: #aaa;"><?php echo esc_html($label); ?></span>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Music Description -->
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label for="music-prompt" style="color: #fff; margin-bottom: 10px; display: block;">
+                                        <?php esc_html_e('Mô Tả Chi Tiết', 'miraculous-music'); ?>
+                                    </label>
+                                    <textarea id="music-prompt"
+                                           name="prompt"
+                                           class="form-control"
+                                           rows="3"
+                                           style="background: #2a2e35; color: #fff; border: 1px solid #3d4148; padding: 12px; border-radius: 5px; resize: vertical;"
+                                           placeholder="<?php esc_attr_e('Ví dụ: Một bài hát về mùa xuân, tình yêu đầu đời, giai điệu nhẹ nhàng...', 'miraculous-music'); ?>"></textarea>
+                                    <small style="color: #888; margin-top: 5px; display: block;">
+                                        <?php esc_html_e('Mô tả thêm về nội dung, cảm xúc, hoặc chủ đề bài hát', 'miraculous-music'); ?>
+                                    </small>
+                                </div>
+
+                                <div class="row">
+                                    <!-- AI Model -->
+                                    <div class="col-md-6">
+                                        <div class="form-group" style="margin-bottom: 20px;">
+                                            <label for="music-model" style="color: #fff; margin-bottom: 10px; display: block;">
+                                                <?php esc_html_e('AI Model', 'miraculous-music'); ?>
+                                            </label>
+                                            <select id="music-model" name="model" class="form-control" style="background: #2a2e35; color: #fff; border: 1px solid #3d4148; padding: 12px; border-radius: 5px;">
+                                                <option value="V4">V4 (Stable)</option>
+                                                <option value="V4.5" selected>V4.5 (Recommended)</option>
+                                                <option value="V4.5PLUS">V4.5 PLUS</option>
+                                                <option value="V5">V5 (Latest)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Instrumental Option -->
+                                    <div class="col-md-6">
+                                        <div class="form-group" style="margin-bottom: 20px;">
+                                            <label style="color: #fff; margin-bottom: 10px; display: block;">
+                                                <?php esc_html_e('Tùy Chọn', 'miraculous-music'); ?>
+                                            </label>
+                                            <label class="instrumental-toggle" style="display: flex; align-items: center; background: #2a2e35; padding: 12px 15px; border-radius: 5px; cursor: pointer;">
+                                                <input type="checkbox" id="make-instrumental" name="make_instrumental" style="margin-right: 10px;">
+                                                <span style="color: #fff;"><?php esc_html_e('Không lời (Instrumental)', 'miraculous-music'); ?></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Generated Task ID -->
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label for="generated-task-id" style="color: #fff; margin-bottom: 10px; display: block;">
+                                        <?php esc_html_e('Task ID (sau khi tạo)', 'miraculous-music'); ?>
+                                    </label>
                                     <input type="text"
                                            id="generated-task-id"
                                            class="form-control"
                                            readonly
-                                           placeholder="<?php esc_attr_e('Task ID will appear here after generation', 'miraculous-music'); ?>">
+                                           style="background: #2a2e35; color: #14b8a6; border: 1px solid #3d4148; padding: 12px; border-radius: 5px;"
+                                           placeholder="<?php esc_attr_e('Task ID sẽ hiển thị ở đây sau khi tạo nhạc', 'miraculous-music'); ?>">
                                 </div>
 
-                                <button type="submit" class="ms_btn">
-                                    <?php esc_html_e('Generate Music', 'miraculous-music'); ?>
+                                <button type="submit" class="ms_btn" style="background: linear-gradient(135deg, #14b8a6, #0d9488); border: none; padding: 15px 40px; font-size: 16px; border-radius: 25px; width: 100%;">
+                                    <i class="fa fa-music" style="margin-right: 10px;"></i>
+                                    <?php esc_html_e('Tạo Nhạc AI', 'miraculous-music'); ?>
                                 </button>
                             </form>
                         </div>
+
+                        <style>
+                            .mood-tag:hover,
+                            .mood-tag:has(input:checked) {
+                                background: linear-gradient(135deg, #14b8a6, #0d9488) !important;
+                            }
+                            .mood-tag:has(input:checked) span,
+                            .mood-tag:hover span {
+                                color: #fff !important;
+                            }
+                            #generate-music-form .form-control:focus {
+                                border-color: #14b8a6;
+                                box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+                                outline: none;
+                            }
+                            .instrumental-toggle:hover {
+                                background: #3d4148 !important;
+                            }
+                        </style>
 
                         <!-- Load Existing Song Section -->
                         <div class="suno-loader-box" style="background: #fff; padding: 30px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #ddd;">

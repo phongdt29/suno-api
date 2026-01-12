@@ -104,15 +104,53 @@
 
             var $form = $(this);
             var $submitBtn = $form.find('button[type="submit"]');
-            var prompt = $form.find('input[name="prompt"]').val();
-            var model = $form.find('select[name="model"]').val() || 'V4';
 
-            if (!prompt) {
-                alert('Vui lòng nhập mô tả bài hát');
+            // Get form values
+            var genre = $form.find('select[name="genre"]').val();
+            var prompt = $form.find('textarea[name="prompt"], input[name="prompt"]').val() || '';
+            var model = $form.find('select[name="model"]').val() || 'V4.5';
+            var makeInstrumental = $form.find('input[name="make_instrumental"]').is(':checked');
+
+            // Get selected moods
+            var moods = [];
+            $form.find('input[name="mood[]"]:checked').each(function() {
+                moods.push($(this).val());
+            });
+
+            // Validate genre selection
+            if (!genre) {
+                alert('Vui lòng chọn thể loại nhạc');
                 return;
             }
 
-            $submitBtn.prop('disabled', true).text('Đang tạo nhạc...');
+            // Build full prompt with genre and mood
+            var fullPrompt = genre;
+
+            if (moods.length > 0) {
+                fullPrompt += ', ' + moods.join(', ');
+            }
+
+            if (prompt) {
+                fullPrompt += '. ' + prompt;
+            }
+
+            // Build style string for database
+            var style = genre;
+            if (moods.length > 0) {
+                style += ', ' + moods.join(', ');
+            }
+
+            console.log('Generating music with:', {
+                genre: genre,
+                moods: moods,
+                prompt: prompt,
+                fullPrompt: fullPrompt,
+                style: style,
+                model: model,
+                instrumental: makeInstrumental
+            });
+
+            $submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Đang tạo nhạc...');
 
             $.ajax({
                 url: miraculousAjax.ajax_url,
@@ -121,8 +159,10 @@
                 data: {
                     action: 'generate_music',
                     nonce: miraculousAjax.nonce,
-                    prompt: prompt,
-                    model: model
+                    prompt: fullPrompt,
+                    style: style,
+                    model: model,
+                    make_instrumental: makeInstrumental ? 1 : 0
                 },
                 success: function(response) {
                     console.log('Generate Response:', response);
