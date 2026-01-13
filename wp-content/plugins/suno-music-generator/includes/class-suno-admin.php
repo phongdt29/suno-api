@@ -425,32 +425,58 @@ class Suno_Admin {
                 </div>
 
                 <!-- Quick Generate Card -->
-                <div class="suno-card">
+                <div class="suno-card suno-card-large">
                     <h2><?php _e('Tạo nhạc nhanh', 'suno-music-generator'); ?></h2>
                     <form id="suno-quick-generate">
+                        <div class="suno-form-row">
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="quick-genre"><strong><?php _e('Thể loại nhạc:', 'suno-music-generator'); ?></strong> <span style="color:red;">*</span></label>
+                                    <select id="quick-genre" name="genre" class="regular-text" required style="width: 100%;">
+                                        <option value=""><?php _e('-- Chọn thể loại --', 'suno-music-generator'); ?></option>
+                                        <?php foreach (self::get_genres() as $group_key => $group) : ?>
+                                            <optgroup label="<?php echo esc_attr($group['label']); ?>">
+                                                <?php foreach ($group['options'] as $value => $label) : ?>
+                                                    <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($label); ?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="quick-model"><strong><?php _e('AI Model:', 'suno-music-generator'); ?></strong></label>
+                                    <select id="quick-model" name="model" class="regular-text" style="width: 100%;">
+                                        <?php foreach (Suno_API::get_models() as $key => $label) : ?>
+                                            <option value="<?php echo esc_attr($key); ?>" <?php selected(get_option('default_model', 'V3_5'), $key); ?>>
+                                                <?php echo esc_html($label); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+
                         <p>
-                            <label for="quick-prompt"><?php _e('Mô tả bài hát:', 'suno-music-generator'); ?></label>
-                            <textarea id="quick-prompt" name="prompt" rows="3" class="large-text" placeholder="<?php esc_attr_e('VD: A happy pop song about summer vacation', 'suno-music-generator'); ?>"></textarea>
+                            <label for="quick-prompt"><strong><?php _e('Mô tả chi tiết:', 'suno-music-generator'); ?></strong></label>
+                            <textarea id="quick-prompt" name="prompt" rows="3" class="large-text" placeholder="<?php esc_attr_e('VD: Một bài hát về mùa xuân, tình yêu đầu đời, giai điệu nhẹ nhàng...', 'suno-music-generator'); ?>"></textarea>
+                            <span class="description"><?php _e('Mô tả thêm về nội dung, cảm xúc, hoặc chủ đề bài hát', 'suno-music-generator'); ?></span>
                         </p>
+
                         <p>
                             <label>
                                 <input type="checkbox" name="instrumental" value="1">
-                                <?php _e('Instrumental (không có lời)', 'suno-music-generator'); ?>
+                                <?php _e('Không lời (Instrumental)', 'suno-music-generator'); ?>
                             </label>
                         </p>
+
                         <p>
-                            <label for="quick-model"><?php _e('Model:', 'suno-music-generator'); ?></label>
-                            <select id="quick-model" name="model">
-                                <?php foreach (Suno_API::get_models() as $key => $label) : ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected(get_option('default_model', 'V3_5'), $key); ?>>
-                                        <?php echo esc_html($label); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <button type="submit" class="button button-primary button-large">
+                                <span class="dashicons dashicons-format-audio" style="vertical-align: middle;"></span>
+                                <?php _e('Tạo Nhạc AI', 'suno-music-generator'); ?>
+                            </button>
                         </p>
-                        <button type="submit" class="button button-primary">
-                            <?php _e('Tạo nhạc', 'suno-music-generator'); ?>
-                        </button>
                     </form>
                     <div id="suno-quick-result" class="suno-result"></div>
                 </div>
