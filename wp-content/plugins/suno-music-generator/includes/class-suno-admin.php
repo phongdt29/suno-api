@@ -33,6 +33,9 @@ class Suno_Admin {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
         add_filter('plugin_action_links_' . SUNO_PLUGIN_BASENAME, array($this, 'add_action_links'));
+
+        // AJAX handler for sample CSV download
+        add_action('wp_ajax_suno_download_sample_csv', array($this, 'download_sample_csv'));
     }
 
     /**
@@ -884,6 +887,47 @@ class Suno_Admin {
                     </form>
                 </div>
 
+                <!-- Import CSV -->
+                <div class="suno-card">
+                    <h2><?php _e('Import từ CSV', 'suno-music-generator'); ?></h2>
+
+                    <div class="suno-csv-info">
+                        <h4><?php _e('Định dạng file CSV:', 'suno-music-generator'); ?></h4>
+                        <p><?php _e('File CSV cần có các cột sau:', 'suno-music-generator'); ?></p>
+                        <ul>
+                            <li><code>genre</code> <span style="color:red;">*</span> - <?php _e('Thể loại nhạc (VD: Nhạc Trẻ, Pop, Lo-Fi...)', 'suno-music-generator'); ?></li>
+                            <li><code>schedule_time</code> <span style="color:red;">*</span> - <?php _e('Thời gian (VD: 2025-02-01 08:00:00)', 'suno-music-generator'); ?></li>
+                            <li><code>prompt</code> - <?php _e('Mô tả chi tiết bài hát', 'suno-music-generator'); ?></li>
+                            <li><code>model</code> - <?php _e('AI Model (V3_5, V4, V4.5, V5) - mặc định V3_5', 'suno-music-generator'); ?></li>
+                            <li><code>instrumental</code> - <?php _e('Không lời (1 = có, 0 = không) - mặc định 0', 'suno-music-generator'); ?></li>
+                            <li><code>repeat_type</code> - <?php _e('Lặp lại (once, daily, weekly, monthly) - mặc định once', 'suno-music-generator'); ?></li>
+                        </ul>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                        <?php wp_nonce_field('suno_import_csv', 'suno_csv_nonce'); ?>
+
+                        <div style="flex: 1; min-width: 250px;">
+                            <label for="csv-file"><strong><?php _e('Chọn file CSV:', 'suno-music-generator'); ?></strong></label>
+                            <input type="file" id="csv-file" name="csv_file" accept=".csv" required style="width: 100%; margin-top: 5px;">
+                        </div>
+
+                        <div>
+                            <button type="submit" class="button button-primary">
+                                <span class="dashicons dashicons-upload" style="vertical-align: middle;"></span>
+                                <?php _e('Import CSV', 'suno-music-generator'); ?>
+                            </button>
+                        </div>
+
+                        <div>
+                            <a href="<?php echo admin_url('admin-ajax.php?action=suno_download_sample_csv&_wpnonce=' . wp_create_nonce('suno_sample_csv')); ?>" class="button">
+                                <span class="dashicons dashicons-download" style="vertical-align: middle;"></span>
+                                <?php _e('Tải CSV mẫu', 'suno-music-generator'); ?>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Scheduled Items -->
                 <div class="suno-card">
                     <h2><?php _e('Danh sách lịch đã đặt', 'suno-music-generator'); ?></h2>
@@ -953,7 +997,212 @@ class Suno_Admin {
         .suno-schedule-wrapper { max-width: 1200px; }
         .suno-form-row { display: flex; gap: 20px; flex-wrap: wrap; }
         .suno-form-col { flex: 1; min-width: 250px; }
+        .suno-csv-info { background: #f0f6fc; border: 1px solid #0969da; border-radius: 6px; padding: 15px; margin-bottom: 15px; }
+        .suno-csv-info h4 { margin: 0 0 10px; color: #0969da; }
+        .suno-csv-info code { background: #fff; padding: 2px 6px; border-radius: 3px; }
+        .suno-csv-info ul { margin: 10px 0 0; padding-left: 20px; }
+        .suno-csv-info li { margin-bottom: 5px; }
         </style>
         <?php
+    }
+
+    /**
+     * Handle CSV import
+     */
+    private function handle_csv_import($table_name) {
+        global $wpdb;
+
+        if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+            echo '<div class="notice notice-error"><p>' . __('Lỗi upload file. Vui lòng thử lại.', 'suno-music-generator') . '</p></div>';
+            return;
+        }
+
+        $file = $_FILES['csv_file'];
+
+        // Check file type
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if ($file_ext !== 'csv') {
+            echo '<div class="notice notice-error"><p>' . __('Chỉ chấp nhận file CSV.', 'suno-music-generator') . '</p></div>';
+            return;
+        }
+
+        // Read CSV file
+        $handle = fopen($file['tmp_name'], 'r');
+        if (!$handle) {
+            echo '<div class="notice notice-error"><p>' . __('Không thể đọc file CSV.', 'suno-music-generator') . '</p></div>';
+            return;
+        }
+
+        $imported = 0;
+        $errors = 0;
+        $row_number = 0;
+        $error_messages = array();
+
+        // Read header row
+        $header = fgetcsv($handle);
+        if (!$header) {
+            fclose($handle);
+            echo '<div class="notice notice-error"><p>' . __('File CSV trống hoặc không hợp lệ.', 'suno-music-generator') . '</p></div>';
+            return;
+        }
+
+        // Normalize header (lowercase, trim)
+        $header = array_map(function($col) {
+            return strtolower(trim($col));
+        }, $header);
+
+        // Expected columns
+        $required_columns = array('genre', 'schedule_time');
+        $optional_columns = array('prompt', 'model', 'instrumental', 'repeat_type');
+
+        // Check required columns
+        foreach ($required_columns as $col) {
+            if (!in_array($col, $header)) {
+                fclose($handle);
+                echo '<div class="notice notice-error"><p>' . sprintf(__('Thiếu cột bắt buộc: %s', 'suno-music-generator'), $col) . '</p></div>';
+                return;
+            }
+        }
+
+        // Process data rows
+        while (($row = fgetcsv($handle)) !== false) {
+            $row_number++;
+
+            // Skip empty rows
+            if (empty(array_filter($row))) {
+                continue;
+            }
+
+            // Map row to associative array
+            $data = array();
+            foreach ($header as $index => $col) {
+                $data[$col] = isset($row[$index]) ? trim($row[$index]) : '';
+            }
+
+            // Validate required fields
+            if (empty($data['genre'])) {
+                $errors++;
+                $error_messages[] = sprintf(__('Dòng %d: Thiếu thể loại nhạc', 'suno-music-generator'), $row_number + 1);
+                continue;
+            }
+
+            if (empty($data['schedule_time'])) {
+                $errors++;
+                $error_messages[] = sprintf(__('Dòng %d: Thiếu thời gian lên lịch', 'suno-music-generator'), $row_number + 1);
+                continue;
+            }
+
+            // Parse schedule time
+            $schedule_timestamp = strtotime($data['schedule_time']);
+            if (!$schedule_timestamp) {
+                $errors++;
+                $error_messages[] = sprintf(__('Dòng %d: Định dạng thời gian không hợp lệ', 'suno-music-generator'), $row_number + 1);
+                continue;
+            }
+
+            $schedule_time = date('Y-m-d H:i:s', $schedule_timestamp);
+
+            // Build full prompt
+            $genre = sanitize_text_field($data['genre']);
+            $prompt = isset($data['prompt']) ? sanitize_textarea_field($data['prompt']) : '';
+            $full_prompt = $genre;
+            if (!empty($prompt)) {
+                $full_prompt .= '. ' . $prompt;
+            }
+
+            // Get other fields with defaults
+            $model = isset($data['model']) && !empty($data['model']) ? sanitize_text_field($data['model']) : get_option('default_model', 'V3_5');
+            $instrumental = isset($data['instrumental']) ? (int) filter_var($data['instrumental'], FILTER_VALIDATE_BOOLEAN) : 0;
+            $repeat_type = isset($data['repeat_type']) && in_array($data['repeat_type'], array('once', 'daily', 'weekly', 'monthly'))
+                ? sanitize_text_field($data['repeat_type'])
+                : 'once';
+
+            // Insert into database
+            $result = $wpdb->insert($table_name, array(
+                'genre' => $genre,
+                'prompt' => $prompt,
+                'full_prompt' => $full_prompt,
+                'model' => $model,
+                'instrumental' => $instrumental,
+                'schedule_time' => $schedule_time,
+                'repeat_type' => $repeat_type,
+                'status' => 'pending',
+                'created_at' => current_time('mysql'),
+            ));
+
+            if ($result) {
+                // Schedule the cron job if in future
+                if ($schedule_timestamp > time()) {
+                    wp_schedule_single_event($schedule_timestamp, 'suno_scheduled_generate', array($wpdb->insert_id));
+                }
+                $imported++;
+            } else {
+                $errors++;
+                $error_messages[] = sprintf(__('Dòng %d: Lỗi lưu vào database', 'suno-music-generator'), $row_number + 1);
+            }
+        }
+
+        fclose($handle);
+
+        // Show results
+        if ($imported > 0) {
+            echo '<div class="notice notice-success"><p>' . sprintf(__('Đã import thành công %d lịch tạo nhạc.', 'suno-music-generator'), $imported) . '</p></div>';
+        }
+
+        if ($errors > 0) {
+            echo '<div class="notice notice-warning"><p>' . sprintf(__('Có %d dòng bị lỗi:', 'suno-music-generator'), $errors) . '</p>';
+            echo '<ul style="margin: 5px 0 0 20px;">';
+            foreach (array_slice($error_messages, 0, 10) as $msg) {
+                echo '<li>' . esc_html($msg) . '</li>';
+            }
+            if (count($error_messages) > 10) {
+                echo '<li>' . sprintf(__('... và %d lỗi khác', 'suno-music-generator'), count($error_messages) - 10) . '</li>';
+            }
+            echo '</ul></div>';
+        }
+    }
+
+    /**
+     * Generate sample CSV content
+     */
+    public static function get_sample_csv() {
+        $lines = array();
+        $lines[] = 'genre,prompt,model,instrumental,schedule_time,repeat_type';
+        $lines[] = 'Nhạc Trẻ,"Bài hát về tình yêu mùa hè, giai điệu vui tươi",V4,0,2025-02-01 08:00:00,once';
+        $lines[] = 'Nhạc Bolero,"Bài hát buồn về tình yêu xa cách",V4,0,2025-02-02 10:00:00,daily';
+        $lines[] = 'Lo-Fi,"Nhạc học bài thư giãn",V4,1,2025-02-03 14:00:00,weekly';
+        $lines[] = 'Pop,"Upbeat summer dance track",V4.5,0,2025-02-04 09:00:00,once';
+        $lines[] = 'Piano,"Relaxing piano melody for meditation",V4,1,2025-02-05 20:00:00,monthly';
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * Download sample CSV file
+     */
+    public function download_sample_csv() {
+        // Verify nonce
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'suno_sample_csv')) {
+            wp_die(__('Bảo mật không hợp lệ.', 'suno-music-generator'));
+        }
+
+        // Check permissions
+        if (!current_user_can('manage_options')) {
+            wp_die(__('Bạn không có quyền thực hiện thao tác này.', 'suno-music-generator'));
+        }
+
+        // Generate CSV content with BOM for UTF-8 support in Excel
+        $csv_content = "\xEF\xBB\xBF" . self::get_sample_csv();
+
+        // Set headers for download
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="suno-schedule-sample.csv"');
+        header('Content-Length: ' . strlen($csv_content));
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        echo $csv_content;
+        exit;
     }
 }
