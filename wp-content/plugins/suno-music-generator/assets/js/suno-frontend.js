@@ -63,7 +63,13 @@
         getFormData() {
             const data = {};
             this.$form.serializeArray().forEach(item => {
-                data[item.name] = item.value;
+                // Handle mood[] array
+                if (item.name === 'mood[]') {
+                    if (!data.moods) data.moods = [];
+                    data.moods.push(item.value);
+                } else {
+                    data[item.name] = item.value;
+                }
             });
 
             // Handle checkbox
@@ -71,12 +77,42 @@
                 data.instrumental = this.$form.find('input[name="instrumental"]').is(':checked');
             }
 
+            // Build full prompt with genre and moods
+            if (data.genre) {
+                let fullStyle = data.genre;
+                if (data.moods && data.moods.length > 0) {
+                    fullStyle += ', ' + data.moods.join(', ');
+                }
+                if (data.style) {
+                    fullStyle += ', ' + data.style;
+                }
+                data.style = fullStyle;
+
+                // Build prompt with genre context
+                if (data.prompt) {
+                    data.prompt = data.genre + '. ' + data.prompt;
+                } else {
+                    data.prompt = data.genre;
+                }
+
+                if (data.moods && data.moods.length > 0) {
+                    data.prompt += ' (' + data.moods.join(', ') + ')';
+                }
+            }
+
+            console.log('Form data:', data);
             return data;
         }
 
         validateForm(data) {
-            if (this.type === 'simple' && !data.prompt) {
-                this.showError(sunoApi.i18n.error, 'Vui lòng nhập mô tả bài hát');
+            // Check genre is selected if genre field exists
+            if (this.$form.find('select[name="genre"]').length && !data.genre) {
+                this.showError(sunoApi.i18n.error, 'Vui lòng chọn thể loại nhạc');
+                return false;
+            }
+
+            if (this.type === 'simple' && !data.genre && !data.prompt) {
+                this.showError(sunoApi.i18n.error, 'Vui lòng chọn thể loại hoặc nhập mô tả bài hát');
                 return false;
             }
 

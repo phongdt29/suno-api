@@ -112,6 +112,117 @@
     accent-color: var(--suno-primary);
 }
 
+/* Genre Select */
+.suno-select-genre {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.suno-select-genre optgroup {
+    font-weight: 700;
+    color: var(--suno-primary);
+    padding: 8px 0;
+}
+
+.suno-select-genre option {
+    font-weight: 400;
+    color: var(--suno-text);
+    padding: 8px 16px;
+}
+
+.suno-required {
+    color: var(--suno-error);
+}
+
+/* Mood Tags */
+.suno-mood-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.suno-mood-tag {
+    display: inline-flex;
+    align-items: center;
+    background: var(--suno-bg);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--suno-border);
+    margin: 0;
+}
+
+.suno-mood-tag:hover {
+    border-color: var(--suno-primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.suno-mood-tag input[type="checkbox"] {
+    display: none;
+}
+
+.suno-mood-tag span {
+    font-size: 13px;
+    color: var(--suno-text-muted);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.suno-mood-tag:has(input:checked) {
+    background: linear-gradient(135deg, var(--suno-primary), var(--suno-primary-hover));
+    border-color: var(--suno-primary);
+}
+
+.suno-mood-tag:has(input:checked) span {
+    color: #ffffff;
+}
+
+/* Instrumental Toggle */
+.suno-instrumental-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--suno-bg);
+    padding: 12px 16px;
+    border-radius: var(--suno-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--suno-border);
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.suno-instrumental-toggle:hover {
+    border-color: var(--suno-primary);
+}
+
+.suno-instrumental-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--suno-primary);
+}
+
+.suno-instrumental-toggle span {
+    font-size: 14px;
+    color: var(--suno-text);
+}
+
+/* Full Width Button */
+.suno-btn-full {
+    width: 100%;
+}
+
+/* Music Icon */
+.suno-icon-music::before {
+    content: "♪";
+    font-size: 18px;
+}
+
 /* Buttons */
 .suno-btn {
     display: inline-flex;
