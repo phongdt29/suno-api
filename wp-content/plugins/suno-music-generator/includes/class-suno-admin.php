@@ -78,11 +78,72 @@ class Suno_Admin {
 
         add_submenu_page(
             'suno-music-generator',
+            __('Lên lịch tạo nhạc', 'suno-music-generator'),
+            __('Lên lịch', 'suno-music-generator'),
+            'manage_options',
+            'suno-music-schedule',
+            array($this, 'render_schedule')
+        );
+
+        add_submenu_page(
+            'suno-music-generator',
             __('Hướng dẫn', 'suno-music-generator'),
             __('Hướng dẫn', 'suno-music-generator'),
             'manage_options',
             'suno-music-guide',
             array($this, 'render_guide')
+        );
+    }
+
+    /**
+     * Get music genres
+     */
+    public static function get_genres() {
+        return array(
+            'vietnamese' => array(
+                'label' => __('Nhạc Việt Nam', 'suno-music-generator'),
+                'options' => array(
+                    'Nhạc Trẻ' => 'Nhạc Trẻ',
+                    'Nhạc Bolero' => 'Nhạc Bolero',
+                    'Nhạc Trữ Tình' => 'Nhạc Trữ Tình',
+                    'Nhạc Tết' => 'Nhạc Tết',
+                    'Nhạc Quê Hương' => 'Nhạc Quê Hương',
+                    'Rap Việt' => 'Rap Việt',
+                    'V-Pop' => 'V-Pop',
+                ),
+            ),
+            'international' => array(
+                'label' => __('Nhạc Quốc Tế', 'suno-music-generator'),
+                'options' => array(
+                    'Pop' => 'Pop',
+                    'Rock' => 'Rock',
+                    'R&B' => 'R&B / Soul',
+                    'Hip Hop' => 'Hip Hop',
+                    'EDM' => 'EDM / Electronic',
+                    'Jazz' => 'Jazz',
+                    'Classical' => 'Classical',
+                    'K-Pop' => 'K-Pop',
+                    'Latin' => 'Latin',
+                ),
+            ),
+            'mood' => array(
+                'label' => __('Nhạc Theo Tâm Trạng', 'suno-music-generator'),
+                'options' => array(
+                    'Nhạc Buồn' => 'Nhạc Buồn',
+                    'Nhạc Vui' => 'Nhạc Vui / Sôi Động',
+                    'Nhạc Thư Giãn' => 'Nhạc Thư Giãn / Chill',
+                    'Nhạc Lãng Mạn' => 'Nhạc Lãng Mạn',
+                ),
+            ),
+            'instrumental' => array(
+                'label' => __('Nhạc Không Lời', 'suno-music-generator'),
+                'options' => array(
+                    'Instrumental' => 'Instrumental',
+                    'Piano' => 'Piano',
+                    'Lo-Fi' => 'Lo-Fi',
+                    'Ambient' => 'Ambient',
+                ),
+            ),
         );
     }
 
