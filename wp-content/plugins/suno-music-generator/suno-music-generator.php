@@ -292,6 +292,7 @@ class Suno_Music_Generator {
             prompt text,
             lyrics text,
             title varchar(255),
+            genre varchar(100) COMMENT 'Thể loại nhạc',
             style varchar(255),
             model varchar(20),
             status varchar(50) DEFAULT 'pending',
@@ -301,7 +302,8 @@ class Suno_Music_Generator {
             PRIMARY KEY (id),
             KEY task_id (task_id),
             KEY user_id (user_id),
-            KEY status (status)
+            KEY status (status),
+            KEY genre (genre)
         ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

@@ -38,6 +38,11 @@ class Suno_Rest_API {
                     'type' => 'string',
                     'sanitize_callback' => 'sanitize_text_field',
                 ),
+                'genre' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
                 'instrumental' => array(
                     'required' => false,
                     'type' => 'boolean',
@@ -743,6 +748,7 @@ CHỈ trả về JSON với format sau, không có text nào khác:
             'prompt' => $data['prompt'] ?? null,
             'lyrics' => $data['lyrics'] ?? null,
             'title' => $data['title'] ?? null,
+            'genre' => $data['genre'] ?? null,
             'style' => $data['style'] ?? null,
             'model' => $data['model'] ?? null,
             'status' => $data['status'],

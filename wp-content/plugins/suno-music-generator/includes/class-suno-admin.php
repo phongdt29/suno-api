@@ -1046,10 +1046,15 @@ class Suno_Admin {
             return;
         }
 
-        // Normalize header (lowercase, trim)
+        // Normalize header (lowercase, trim, remove BOM)
         $header = array_map(function($col) {
+            // Remove UTF-8 BOM if present
+            $col = preg_replace('/^\xEF\xBB\xBF/', '', $col);
             return strtolower(trim($col));
         }, $header);
+
+        // Debug: show detected columns
+        // echo '<div class="notice notice-info"><p>Detected columns: ' . implode(', ', $header) . '</p></div>';
 
         // Expected columns
         $required_columns = array('genre', 'schedule_time');
