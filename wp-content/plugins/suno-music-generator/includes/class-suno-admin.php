@@ -96,6 +96,15 @@ class Suno_Admin {
             'suno-music-guide',
             array($this, 'render_guide')
         );
+
+        add_submenu_page(
+            'suno-music-generator',
+            __('Nhạc theo chủ đề', 'suno-music-generator'),
+            __('Nhạc theo chủ đề', 'suno-music-generator'),
+            'manage_options',
+            'suno-music-themes',
+            array($this, 'render_themes')
+        );
     }
 
     /**
