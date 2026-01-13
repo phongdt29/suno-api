@@ -743,4 +743,217 @@ class Suno_Admin {
         </div>
         <?php
     }
+
+    /**
+     * Render schedule page
+     */
+    public function render_schedule() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'suno_schedule';
+
+        // Handle CSV import
+        if (isset($_POST['suno_csv_nonce']) && wp_verify_nonce($_POST['suno_csv_nonce'], 'suno_import_csv')) {
+            $this->handle_csv_import($table_name);
+        }
+
+        // Handle form submission
+        if (isset($_POST['suno_schedule_nonce']) && wp_verify_nonce($_POST['suno_schedule_nonce'], 'suno_add_schedule')) {
+            $genre = sanitize_text_field($_POST['schedule_genre']);
+            $prompt = sanitize_textarea_field($_POST['schedule_prompt']);
+            $model = sanitize_text_field($_POST['schedule_model']);
+            $schedule_time = sanitize_text_field($_POST['schedule_time']);
+            $repeat = sanitize_text_field($_POST['schedule_repeat']);
+            $instrumental = isset($_POST['schedule_instrumental']) ? 1 : 0;
+
+            // Build full prompt
+            $full_prompt = $genre;
+            if (!empty($prompt)) {
+                $full_prompt .= '. ' . $prompt;
+            }
+
+            $wpdb->insert($table_name, array(
+                'genre' => $genre,
+                'prompt' => $prompt,
+                'full_prompt' => $full_prompt,
+                'model' => $model,
+                'instrumental' => $instrumental,
+                'schedule_time' => $schedule_time,
+                'repeat_type' => $repeat,
+                'status' => 'pending',
+                'created_at' => current_time('mysql'),
+            ));
+
+            // Schedule the cron job
+            $timestamp = strtotime($schedule_time);
+            if ($timestamp > time()) {
+                wp_schedule_single_event($timestamp, 'suno_scheduled_generate', array($wpdb->insert_id));
+            }
+
+            echo '<div class="notice notice-success"><p>' . __('Đã lên lịch tạo nhạc thành công!', 'suno-music-generator') . '</p></div>';
+        }
+
+        // Handle delete
+        if (isset($_GET['delete_schedule']) && isset($_GET['_wpnonce'])) {
+            if (wp_verify_nonce($_GET['_wpnonce'], 'delete_schedule_' . $_GET['delete_schedule'])) {
+                $wpdb->delete($table_name, array('id' => intval($_GET['delete_schedule'])));
+                echo '<div class="notice notice-success"><p>' . __('Đã xóa lịch tạo nhạc!', 'suno-music-generator') . '</p></div>';
+            }
+        }
+
+        // Get scheduled items
+        $scheduled_items = $wpdb->get_results("SELECT * FROM $table_name ORDER BY schedule_time ASC");
+        ?>
+        <div class="wrap suno-admin-wrap">
+            <h1><?php _e('Lên lịch tạo nhạc', 'suno-music-generator'); ?></h1>
+
+            <div class="suno-schedule-wrapper">
+                <!-- Add New Schedule -->
+                <div class="suno-card suno-card-large">
+                    <h2><?php _e('Thêm lịch tạo nhạc mới', 'suno-music-generator'); ?></h2>
+                    <form method="post" action="">
+                        <?php wp_nonce_field('suno_add_schedule', 'suno_schedule_nonce'); ?>
+
+                        <div class="suno-form-row">
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="schedule-genre"><strong><?php _e('Thể loại nhạc:', 'suno-music-generator'); ?></strong> <span style="color:red;">*</span></label>
+                                    <select id="schedule-genre" name="schedule_genre" class="regular-text" required style="width: 100%;">
+                                        <option value=""><?php _e('-- Chọn thể loại --', 'suno-music-generator'); ?></option>
+                                        <?php foreach (self::get_genres() as $group_key => $group) : ?>
+                                            <optgroup label="<?php echo esc_attr($group['label']); ?>">
+                                                <?php foreach ($group['options'] as $value => $label) : ?>
+                                                    <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($label); ?></option>
+                                                <?php endforeach; ?>
+                                            </optgroup>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="schedule-model"><strong><?php _e('AI Model:', 'suno-music-generator'); ?></strong></label>
+                                    <select id="schedule-model" name="schedule_model" class="regular-text" style="width: 100%;">
+                                        <?php foreach (Suno_API::get_models() as $key => $label) : ?>
+                                            <option value="<?php echo esc_attr($key); ?>" <?php selected(get_option('default_model', 'V3_5'), $key); ?>>
+                                                <?php echo esc_html($label); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+
+                        <p>
+                            <label for="schedule-prompt"><strong><?php _e('Mô tả chi tiết:', 'suno-music-generator'); ?></strong></label>
+                            <textarea id="schedule-prompt" name="schedule_prompt" rows="3" class="large-text" placeholder="<?php esc_attr_e('VD: Một bài hát về mùa xuân, tình yêu đầu đời...', 'suno-music-generator'); ?>"></textarea>
+                        </p>
+
+                        <div class="suno-form-row">
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="schedule-time"><strong><?php _e('Thời gian tạo:', 'suno-music-generator'); ?></strong> <span style="color:red;">*</span></label>
+                                    <input type="datetime-local" id="schedule-time" name="schedule_time" required style="width: 100%;">
+                                </p>
+                            </div>
+                            <div class="suno-form-col">
+                                <p>
+                                    <label for="schedule-repeat"><strong><?php _e('Lặp lại:', 'suno-music-generator'); ?></strong></label>
+                                    <select id="schedule-repeat" name="schedule_repeat" style="width: 100%;">
+                                        <option value="once"><?php _e('Một lần', 'suno-music-generator'); ?></option>
+                                        <option value="daily"><?php _e('Hàng ngày', 'suno-music-generator'); ?></option>
+                                        <option value="weekly"><?php _e('Hàng tuần', 'suno-music-generator'); ?></option>
+                                        <option value="monthly"><?php _e('Hàng tháng', 'suno-music-generator'); ?></option>
+                                    </select>
+                                </p>
+                            </div>
+                        </div>
+
+                        <p>
+                            <label>
+                                <input type="checkbox" name="schedule_instrumental" value="1">
+                                <?php _e('Không lời (Instrumental)', 'suno-music-generator'); ?>
+                            </label>
+                        </p>
+
+                        <p>
+                            <button type="submit" class="button button-primary button-large">
+                                <span class="dashicons dashicons-calendar-alt" style="vertical-align: middle;"></span>
+                                <?php _e('Lên lịch tạo nhạc', 'suno-music-generator'); ?>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Scheduled Items -->
+                <div class="suno-card">
+                    <h2><?php _e('Danh sách lịch đã đặt', 'suno-music-generator'); ?></h2>
+
+                    <?php if (empty($scheduled_items)) : ?>
+                        <p class="description"><?php _e('Chưa có lịch tạo nhạc nào.', 'suno-music-generator'); ?></p>
+                    <?php else : ?>
+                        <table class="wp-list-table widefat fixed striped">
+                            <thead>
+                                <tr>
+                                    <th><?php _e('Thể loại', 'suno-music-generator'); ?></th>
+                                    <th><?php _e('Mô tả', 'suno-music-generator'); ?></th>
+                                    <th><?php _e('Thời gian', 'suno-music-generator'); ?></th>
+                                    <th><?php _e('Lặp lại', 'suno-music-generator'); ?></th>
+                                    <th><?php _e('Trạng thái', 'suno-music-generator'); ?></th>
+                                    <th><?php _e('Thao tác', 'suno-music-generator'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($scheduled_items as $item) : ?>
+                                    <tr>
+                                        <td><strong><?php echo esc_html($item->genre); ?></strong></td>
+                                        <td><?php echo esc_html(wp_trim_words($item->prompt, 10, '...')); ?></td>
+                                        <td><?php echo esc_html(date_i18n('d/m/Y H:i', strtotime($item->schedule_time))); ?></td>
+                                        <td>
+                                            <?php
+                                            $repeat_labels = array(
+                                                'once' => __('Một lần', 'suno-music-generator'),
+                                                'daily' => __('Hàng ngày', 'suno-music-generator'),
+                                                'weekly' => __('Hàng tuần', 'suno-music-generator'),
+                                                'monthly' => __('Hàng tháng', 'suno-music-generator'),
+                                            );
+                                            echo esc_html($repeat_labels[$item->repeat_type] ?? $item->repeat_type);
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <span class="status-<?php echo esc_attr($item->status); ?>" style="
+                                                padding: 3px 8px;
+                                                border-radius: 3px;
+                                                font-size: 12px;
+                                                <?php
+                                                if ($item->status === 'pending') echo 'background: #fff3cd; color: #856404;';
+                                                elseif ($item->status === 'completed') echo 'background: #d4edda; color: #155724;';
+                                                elseif ($item->status === 'failed') echo 'background: #f8d7da; color: #721c24;';
+                                                ?>
+                                            ">
+                                                <?php echo esc_html(ucfirst($item->status)); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=suno-music-schedule&delete_schedule=' . $item->id), 'delete_schedule_' . $item->id); ?>"
+                                               class="button button-small"
+                                               onclick="return confirm('<?php esc_attr_e('Bạn có chắc muốn xóa lịch này?', 'suno-music-generator'); ?>');">
+                                                <?php _e('Xóa', 'suno-music-generator'); ?>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        .suno-schedule-wrapper { max-width: 1200px; }
+        .suno-form-row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .suno-form-col { flex: 1; min-width: 250px; }
+        </style>
+        <?php
+    }
 }

@@ -237,6 +237,50 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Form Layout */
+.suno-form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.suno-form-col {
+    flex: 1;
+    min-width: 250px;
+}
+
+.suno-card-large {
+    grid-column: span 2;
+}
+
+/* Genre Select */
+.suno-card select[name*="genre"] {
+    width: 100%;
+    max-width: 100%;
+}
+
+.suno-card select[name*="genre"] optgroup {
+    font-weight: 700;
+    color: #2271b1;
+    padding: 8px 0;
+}
+
+.suno-card select[name*="genre"] option {
+    font-weight: 400;
+    color: #1e1e1e;
+    padding: 5px 10px;
+}
+
+/* Schedule Page */
+.suno-schedule-wrapper {
+    max-width: 1200px;
+}
+
+.suno-schedule-wrapper .suno-card {
+    margin-bottom: 20px;
+}
+
 /* Responsive */
 @media screen and (max-width: 782px) {
     .suno-dashboard {
@@ -249,5 +293,17 @@
 
     .suno-admin-wrap .regular-text {
         width: 100%;
+    }
+
+    .suno-card-large {
+        grid-column: span 1;
+    }
+
+    .suno-form-row {
+        flex-direction: column;
+    }
+
+    .suno-form-col {
+        min-width: 100%;
     }
 }

@@ -83,6 +83,86 @@ class Suno_Music_Generator {
         add_action('init', array('Suno_Admin', 'get_instance'));
         add_action('rest_api_init', array('Suno_Rest_API', 'register_routes'));
         add_action('init', array('Suno_Shortcodes', 'register'));
+
+        // Schedule cron handler
+        add_action('suno_scheduled_generate', array($this, 'handle_scheduled_generate'));
+    }
+
+    /**
+     * Handle scheduled music generation
+     */
+    public function handle_scheduled_generate($schedule_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'suno_schedule';
+
+        // Get schedule data
+        $schedule = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE id = %d",
+            $schedule_id
+        ));
+
+        if (!$schedule || $schedule->status !== 'pending') {
+            return;
+        }
+
+        // Update status to processing
+        $wpdb->update($table_name, array('status' => 'processing'), array('id' => $schedule_id));
+
+        // Generate music
+        $api = new Suno_API();
+        $result = $api->generate(array(
+            'prompt' => $schedule->full_prompt,
+            'model' => $schedule->model,
+            'make_instrumental' => (bool) $schedule->instrumental,
+            'style' => $schedule->genre,
+        ));
+
+        if ($result['success']) {
+            // Update status
+            $wpdb->update($table_name, array(
+                'status' => 'completed',
+                'task_id' => $result['data']['taskId'] ?? '',
+            ), array('id' => $schedule_id));
+
+            // Handle repeat
+            if ($schedule->repeat_type !== 'once') {
+                $next_time = $this->calculate_next_schedule($schedule->schedule_time, $schedule->repeat_type);
+                if ($next_time) {
+                    $wpdb->insert($table_name, array(
+                        'genre' => $schedule->genre,
+                        'prompt' => $schedule->prompt,
+                        'full_prompt' => $schedule->full_prompt,
+                        'model' => $schedule->model,
+                        'instrumental' => $schedule->instrumental,
+                        'schedule_time' => $next_time,
+                        'repeat_type' => $schedule->repeat_type,
+                        'status' => 'pending',
+                        'created_at' => current_time('mysql'),
+                    ));
+                    wp_schedule_single_event(strtotime($next_time), 'suno_scheduled_generate', array($wpdb->insert_id));
+                }
+            }
+        } else {
+            $wpdb->update($table_name, array('status' => 'failed'), array('id' => $schedule_id));
+        }
+    }
+
+    /**
+     * Calculate next schedule time
+     */
+    private function calculate_next_schedule($current_time, $repeat_type) {
+        $timestamp = strtotime($current_time);
+
+        switch ($repeat_type) {
+            case 'daily':
+                return date('Y-m-d H:i:s', strtotime('+1 day', $timestamp));
+            case 'weekly':
+                return date('Y-m-d H:i:s', strtotime('+1 week', $timestamp));
+            case 'monthly':
+                return date('Y-m-d H:i:s', strtotime('+1 month', $timestamp));
+            default:
+                return null;
+        }
     }
 
     /**
@@ -201,10 +281,10 @@ class Suno_Music_Generator {
      */
     private function create_tables() {
         global $wpdb;
-
-        $table_name = $wpdb->prefix . 'suno_history';
         $charset_collate = $wpdb->get_charset_collate();
 
+        // History table
+        $table_name = $wpdb->prefix . 'suno_history';
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             user_id bigint(20) NOT NULL DEFAULT 0,
@@ -226,6 +306,28 @@ class Suno_Music_Generator {
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
+
+        // Schedule table
+        $schedule_table = $wpdb->prefix . 'suno_schedule';
+        $sql_schedule = "CREATE TABLE IF NOT EXISTS $schedule_table (
+            id bigint(20) NOT NULL AUTO_INCREMENT,
+            genre varchar(100) NOT NULL,
+            prompt text,
+            full_prompt text,
+            model varchar(20) DEFAULT 'V3_5',
+            instrumental tinyint(1) DEFAULT 0,
+            schedule_time datetime NOT NULL,
+            repeat_type varchar(20) DEFAULT 'once',
+            status varchar(50) DEFAULT 'pending',
+            task_id varchar(100),
+            created_at datetime DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY status (status),
+            KEY schedule_time (schedule_time)
+        ) $charset_collate;";
+
+        dbDelta($sql_schedule);
     }
 }
 
