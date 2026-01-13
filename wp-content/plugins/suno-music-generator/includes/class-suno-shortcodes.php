@@ -23,66 +23,202 @@ class Suno_Shortcodes {
     }
 
     /**
+     * Get music genres/categories
+     */
+    public static function get_genres() {
+        return array(
+            'vietnamese' => array(
+                'label' => __('Nhạc Việt Nam', 'suno-music-generator'),
+                'options' => array(
+                    'Nhạc Trẻ' => 'Nhạc Trẻ',
+                    'Nhạc Bolero' => 'Nhạc Bolero',
+                    'Nhạc Trữ Tình' => 'Nhạc Trữ Tình',
+                    'Nhạc Tết' => 'Nhạc Tết',
+                    'Nhạc Quê Hương' => 'Nhạc Quê Hương',
+                    'Nhạc Cách Mạng' => 'Nhạc Cách Mạng',
+                    'Nhạc Thiếu Nhi' => 'Nhạc Thiếu Nhi',
+                    'Rap Việt' => 'Rap Việt',
+                    'V-Pop' => 'V-Pop',
+                ),
+            ),
+            'international' => array(
+                'label' => __('Nhạc Quốc Tế', 'suno-music-generator'),
+                'options' => array(
+                    'Pop' => 'Pop',
+                    'Rock' => 'Rock',
+                    'R&B' => 'R&B / Soul',
+                    'Hip Hop' => 'Hip Hop',
+                    'EDM' => 'EDM / Electronic',
+                    'Jazz' => 'Jazz',
+                    'Blues' => 'Blues',
+                    'Country' => 'Country',
+                    'Classical' => 'Classical',
+                    'Reggae' => 'Reggae',
+                    'Metal' => 'Metal',
+                    'Indie' => 'Indie',
+                    'K-Pop' => 'K-Pop',
+                    'J-Pop' => 'J-Pop',
+                    'Latin' => 'Latin',
+                ),
+            ),
+            'mood' => array(
+                'label' => __('Nhạc Theo Tâm Trạng', 'suno-music-generator'),
+                'options' => array(
+                    'Nhạc Buồn' => 'Nhạc Buồn',
+                    'Nhạc Vui' => 'Nhạc Vui / Sôi Động',
+                    'Nhạc Thư Giãn' => 'Nhạc Thư Giãn / Chill',
+                    'Nhạc Lãng Mạn' => 'Nhạc Lãng Mạn',
+                    'Nhạc Tình Yêu' => 'Nhạc Tình Yêu',
+                    'Nhạc Chia Tay' => 'Nhạc Chia Tay',
+                ),
+            ),
+            'purpose' => array(
+                'label' => __('Nhạc Theo Mục Đích', 'suno-music-generator'),
+                'options' => array(
+                    'Nhạc Tập Gym' => 'Nhạc Tập Gym / Workout',
+                    'Nhạc Ngủ' => 'Nhạc Ngủ / Sleep',
+                    'Nhạc Học Bài' => 'Nhạc Học Bài / Study',
+                    'Nhạc Café' => 'Nhạc Café',
+                    'Nhạc Thiền' => 'Nhạc Thiền / Meditation',
+                    'Nhạc Tiệc' => 'Nhạc Tiệc / Party',
+                    'Nhạc Đám Cưới' => 'Nhạc Đám Cưới',
+                ),
+            ),
+            'instrumental' => array(
+                'label' => __('Nhạc Không Lời', 'suno-music-generator'),
+                'options' => array(
+                    'Instrumental' => 'Instrumental',
+                    'Piano' => 'Piano',
+                    'Guitar Acoustic' => 'Guitar Acoustic',
+                    'Lo-Fi' => 'Lo-Fi',
+                    'Ambient' => 'Ambient',
+                    'Orchestra' => 'Orchestra',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Get music moods
+     */
+    public static function get_moods() {
+        return array(
+            'upbeat' => __('Sôi Động', 'suno-music-generator'),
+            'slow' => __('Chậm Rãi', 'suno-music-generator'),
+            'emotional' => __('Xúc Động', 'suno-music-generator'),
+            'energetic' => __('Năng Lượng', 'suno-music-generator'),
+            'calm' => __('Bình Yên', 'suno-music-generator'),
+            'dark' => __('U Tối', 'suno-music-generator'),
+            'bright' => __('Tươi Sáng', 'suno-music-generator'),
+            'nostalgic' => __('Hoài Niệm', 'suno-music-generator'),
+            'romantic' => __('Lãng Mạn', 'suno-music-generator'),
+            'powerful' => __('Mạnh Mẽ', 'suno-music-generator'),
+        );
+    }
+
+    /**
      * Basic generator shortcode
-     * [suno_generator model="V3_5" show_instrumental="true"]
+     * [suno_generator model="V3_5" show_instrumental="true" show_genre="true"]
      */
     public static function generator_shortcode($atts) {
         $atts = shortcode_atts(array(
             'model' => get_option('default_model', 'V3_5'),
             'show_instrumental' => 'true',
             'show_model' => 'true',
+            'show_genre' => 'true',
+            'show_mood' => 'true',
         ), $atts);
 
         $models = Suno_API::get_models();
+        $genres = self::get_genres();
+        $moods = self::get_moods();
         $show_instrumental = filter_var($atts['show_instrumental'], FILTER_VALIDATE_BOOLEAN);
         $show_model = filter_var($atts['show_model'], FILTER_VALIDATE_BOOLEAN);
+        $show_genre = filter_var($atts['show_genre'], FILTER_VALIDATE_BOOLEAN);
+        $show_mood = filter_var($atts['show_mood'], FILTER_VALIDATE_BOOLEAN);
 
         ob_start();
         ?>
         <div class="suno-generator-wrap" data-type="simple">
             <form class="suno-generator-form">
+                <?php if ($show_genre) : ?>
+                <!-- Genre/Category Selection -->
                 <div class="suno-form-group">
-                    <label for="suno-prompt"><?php _e('Mô tả bài hát của bạn', 'suno-music-generator'); ?></label>
-                    <textarea
-                        id="suno-prompt"
-                        name="prompt"
-                        rows="4"
-                        placeholder="<?php esc_attr_e('VD: A catchy pop song about summer love with upbeat melody and happy vibes', 'suno-music-generator'); ?>"
-                        required
-                    ></textarea>
-                    <small class="suno-hint"><?php _e('Mô tả chi tiết bằng tiếng Anh để có kết quả tốt nhất', 'suno-music-generator'); ?></small>
-                </div>
-
-                <?php if ($show_instrumental) : ?>
-                <div class="suno-form-group suno-checkbox-group">
-                    <label>
-                        <input type="checkbox" name="instrumental" value="1">
-                        <?php _e('Instrumental (không có lời)', 'suno-music-generator'); ?>
-                    </label>
-                </div>
-                <?php endif; ?>
-
-                <?php if ($show_model) : ?>
-                <div class="suno-form-group">
-                    <label for="suno-model"><?php _e('Model', 'suno-music-generator'); ?></label>
-                    <select id="suno-model" name="model">
-                        <?php foreach ($models as $key => $label) : ?>
-                            <option value="<?php echo esc_attr($key); ?>" <?php selected($atts['model'], $key); ?>>
-                                <?php echo esc_html($label); ?>
-                            </option>
+                    <label for="suno-genre"><?php _e('Thể Loại Nhạc', 'suno-music-generator'); ?> <span class="suno-required">*</span></label>
+                    <select id="suno-genre" name="genre" required class="suno-select-genre">
+                        <option value=""><?php _e('-- Chọn thể loại --', 'suno-music-generator'); ?></option>
+                        <?php foreach ($genres as $group_key => $group) : ?>
+                            <optgroup label="<?php echo esc_attr($group['label']); ?>">
+                                <?php foreach ($group['options'] as $value => $label) : ?>
+                                    <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($label); ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <?php else : ?>
-                <input type="hidden" name="model" value="<?php echo esc_attr($atts['model']); ?>">
+                <?php endif; ?>
+
+                <?php if ($show_mood) : ?>
+                <!-- Mood Selection -->
+                <div class="suno-form-group">
+                    <label><?php _e('Phong Cách / Mood', 'suno-music-generator'); ?></label>
+                    <div class="suno-mood-tags">
+                        <?php foreach ($moods as $value => $label) : ?>
+                            <label class="suno-mood-tag">
+                                <input type="checkbox" name="mood[]" value="<?php echo esc_attr($value); ?>">
+                                <span><?php echo esc_html($label); ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
                 <?php endif; ?>
 
                 <div class="suno-form-group">
-                    <button type="submit" class="suno-btn suno-btn-primary">
-                        <span class="suno-btn-text"><?php _e('Tạo nhạc', 'suno-music-generator'); ?></span>
+                    <label for="suno-prompt"><?php _e('Mô tả chi tiết', 'suno-music-generator'); ?></label>
+                    <textarea
+                        id="suno-prompt"
+                        name="prompt"
+                        rows="3"
+                        placeholder="<?php esc_attr_e('VD: Một bài hát về mùa xuân, tình yêu đầu đời, giai điệu nhẹ nhàng...', 'suno-music-generator'); ?>"
+                    ></textarea>
+                    <small class="suno-hint"><?php _e('Mô tả thêm về nội dung, cảm xúc, hoặc chủ đề bài hát', 'suno-music-generator'); ?></small>
+                </div>
+
+                <div class="suno-form-row">
+                    <?php if ($show_model) : ?>
+                    <div class="suno-form-group suno-form-half">
+                        <label for="suno-model"><?php _e('AI Model', 'suno-music-generator'); ?></label>
+                        <select id="suno-model" name="model">
+                            <?php foreach ($models as $key => $label) : ?>
+                                <option value="<?php echo esc_attr($key); ?>" <?php selected($atts['model'], $key); ?>>
+                                    <?php echo esc_html($label); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php else : ?>
+                    <input type="hidden" name="model" value="<?php echo esc_attr($atts['model']); ?>">
+                    <?php endif; ?>
+
+                    <?php if ($show_instrumental) : ?>
+                    <div class="suno-form-group suno-form-half suno-checkbox-group">
+                        <label class="suno-instrumental-toggle">
+                            <input type="checkbox" name="instrumental" value="1">
+                            <span><?php _e('Không lời (Instrumental)', 'suno-music-generator'); ?></span>
+                        </label>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="suno-form-group">
+                    <button type="submit" class="suno-btn suno-btn-primary suno-btn-full">
+                        <span class="suno-btn-text">
+                            <i class="suno-icon-music"></i>
+                            <?php _e('Tạo Nhạc AI', 'suno-music-generator'); ?>
+                        </span>
                         <span class="suno-btn-loading" style="display: none;">
                             <span class="suno-spinner"></span>
-                            <?php _e('Đang xử lý...', 'suno-music-generator'); ?>
+                            <?php _e('Đang tạo nhạc...', 'suno-music-generator'); ?>
                         </span>
                     </button>
                 </div>
@@ -109,14 +245,34 @@ class Suno_Shortcodes {
     public static function custom_generator_shortcode($atts) {
         $atts = shortcode_atts(array(
             'model' => get_option('default_model', 'V3_5'),
+            'show_genre' => 'true',
         ), $atts);
 
         $models = Suno_API::get_models();
+        $genres = self::get_genres();
+        $show_genre = filter_var($atts['show_genre'], FILTER_VALIDATE_BOOLEAN);
 
         ob_start();
         ?>
         <div class="suno-generator-wrap" data-type="custom">
             <form class="suno-generator-form suno-custom-form">
+                <?php if ($show_genre) : ?>
+                <!-- Genre/Category Selection -->
+                <div class="suno-form-group">
+                    <label for="suno-genre-custom"><?php _e('Thể Loại Nhạc', 'suno-music-generator'); ?> <span class="suno-required">*</span></label>
+                    <select id="suno-genre-custom" name="genre" required class="suno-select-genre">
+                        <option value=""><?php _e('-- Chọn thể loại --', 'suno-music-generator'); ?></option>
+                        <?php foreach ($genres as $group_key => $group) : ?>
+                            <optgroup label="<?php echo esc_attr($group['label']); ?>">
+                                <?php foreach ($group['options'] as $value => $label) : ?>
+                                    <option value="<?php echo esc_attr($value); ?>"><?php echo esc_html($label); ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <?php endif; ?>
+
                 <div class="suno-form-row">
                     <div class="suno-form-group suno-form-half">
                         <label for="suno-title"><?php _e('Tiêu đề bài hát', 'suno-music-generator'); ?></label>
@@ -129,12 +285,12 @@ class Suno_Shortcodes {
                     </div>
 
                     <div class="suno-form-group suno-form-half">
-                        <label for="suno-style"><?php _e('Phong cách', 'suno-music-generator'); ?></label>
+                        <label for="suno-style"><?php _e('Phong cách bổ sung', 'suno-music-generator'); ?></label>
                         <input
                             type="text"
                             id="suno-style"
                             name="style"
-                            placeholder="<?php esc_attr_e('VD: Pop, Ballad, Rock, R&B...', 'suno-music-generator'); ?>"
+                            placeholder="<?php esc_attr_e('VD: emotional, upbeat, energetic...', 'suno-music-generator'); ?>"
                         >
                     </div>
                 </div>
